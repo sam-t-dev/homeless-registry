@@ -11,3 +11,11 @@ Fri Sep 11 08:30:01 CEST 2026 - Not a git repo, skipping git operations
 Fri Sep 11 09:00:01 CEST 2026 - Node.js not found, skipping index generation
 Fri Sep 11 09:00:01 CEST 2026 - Not a git repo, skipping git operations
 2026-09-11 09:00:01 - Sub-Sam cron job completed successfully
+2026-09-11 09:30:02 - Sub-Sam cron job starting
+Fri Sep 11 09:30:02 CEST 2026 - Node.js not found, skipping index generation
+Fri Sep 11 09:30:02 CEST 2026 - No changes to index.html, skipping git commit
+2026-09-11 09:30:02 - Sub-Sam cron job completed successfully
+2026-09-11 10:00:02 - Sub-Sam cron job starting
+Fri Sep 11 10:00:02 CEST 2026 - Node.js not found, skipping index generation
+Fri Sep 11 10:00:02 CEST 2026 - No changes to index.html, skipping git commit
+2026-09-11 10:00:02 - Sub-Sam cron job completed successfully
