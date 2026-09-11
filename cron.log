@@ -1,0 +1,13 @@
+2026-09-11 08:10:39 - Sub-Sam cron job starting
+Fri Sep 11 08:10:39 CEST 2026 - Running generate-index.js
+Generated index.html with 0 records, 0 cities
+Fri Sep 11 08:10:40 CEST 2026 - Not a git repo, skipping git operations
+2026-09-11 08:10:40 - Sub-Sam cron job completed successfully
+2026-09-11 08:30:01 - Sub-Sam cron job starting
+Fri Sep 11 08:30:01 CEST 2026 - Node.js not found, skipping index generation
+Fri Sep 11 08:30:01 CEST 2026 - Not a git repo, skipping git operations
+2026-09-11 08:30:01 - Sub-Sam cron job completed successfully
+2026-09-11 09:00:01 - Sub-Sam cron job starting
+Fri Sep 11 09:00:01 CEST 2026 - Node.js not found, skipping index generation
+Fri Sep 11 09:00:01 CEST 2026 - Not a git repo, skipping git operations
+2026-09-11 09:00:01 - Sub-Sam cron job completed successfully
