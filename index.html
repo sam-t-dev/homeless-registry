@@ -18,98 +18,48 @@
   </header>
 
   <main>
-    <section class="aggregate-view" id="aggregateView">
-      <div class="counts">
-        <div class="count-card">
-          <h3>Total Records</h3>
-          <div class="number" id="totalCount">0</div>
-        </div>
-        <div class="count-card">
-          <h3>Unique Cities</h3>
-          <div class="number" id="uniqueCities">0</div>
-        </div>
-        <div class="count-card">
-          <h3>Active Situations</h3>
-          <div class="number" id="activeSituations">0</div>
-        </div>
-      </div>
-
-      <div class="city-breakdown">
-        <h4>By City</h4>
-        <ul id="cityList">
-          <!-- Dynamically generated -->
-        </ul>
-        <div class="hint">No data yet — submit a situation above</div>
-      </div>
-
-      <div class="counts" style="margin-top: 2rem;">
-        <div class="count-card">
-          <h3>By Situation</h3>
-          <div id="situationBreakdown">
-            <div><strong>rough sleeping:</strong> 0</div>
-            <div><strong>vehicle:</strong> 0</div>
-            <div><strong>couch:</strong> 0</div>
-            <div><strong>other:</strong> 0</div>
-          </div>
-        </div>
-        <div class="count-card">
-          <h3>By Duration</h3>
-          <div id="durationBreakdown">
-            <div><strong>less than week:</strong> 0</div>
-            <div><strong>1-4 weeks:</strong> 0</div>
-            <div><strong>1-3 months:</strong> 0</div>
-            <div><strong>3+ months:</strong> 0</div>
-          </div>
-        </div>
+    <!-- Map section - front and center, takes up most of the screen -->
+    <section class="map-section">
+      <div id="map" style="width: 100%; height: 70vh; position: relative;"></div>
+      <div class="map-legend" style="position: absolute; bottom: 20px; left: 20px; background: var(--card-bg); padding: 1rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); z-index: 1000; font-size: 0.85rem;">
+        <strong>Legend</strong><br>
+        <i style="background: #3498db; width: 16px; height: 16px; display: inline-block; margin-right: 4px;"></i> Rough sleeping<br>
+        <i style="background: #9b59b6; width: 16px; height: 16px; display: inline-block; margin-right: 4px;"></i> Vehicle<br>
+        <i style="background: #e67e22; width: 16px; height: 16px; display: inline-block; margin-right: 4px;"></i> Couch surfing<br>
+        <i style="background: #95a5a6; width: 16px; height: 16px; display: inline-block; margin-right: 4px;"></i> Other
       </div>
     </section>
 
-    <!-- Submission Form -->
-    <section class="submission-form" id="submissionForm" style="display: block;">
-      <h3>Share Your Situation</h3>
-      <form>
-        <div class="form-row">
-          <div class="form-group required">
-            <label for="city">City</label>
-            <input type="text" id="city" name="city" placeholder="e.g. Sydney" required>
-          </div>
-          <div class="form-group required">
-            <label for="category">Sleeping Situation</label>
-            <div class="checkbox-group">
-              <label><input type="radio" name="category" value="rough_sleeping" required> Rough sleeping</label>
-              <label><input type="radio" name="category" value="vehicle" required> Vehicle/van</label>
-              <label><input type="radio" name="category" value="couch" required> Couch surfing</label>
-            </div>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group required">
-            <label for="duration">Duration</label>
-            <div class="checkbox-group">
-              <label><input type="radio" name="duration" value="less_than_week" required> Less than 1 week</label>
-              <label><input type="radio" name="duration" value="1_4_weeks" required> 1-4 weeks</label>
-              <label><input type="radio" name="duration" value="1_3_months" required> 1-3 months</label>
-              <label><input type="radio" name="duration" value="3_plus_months" required> 3+ months</label>
-            </div>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="needs">Needs (check all that apply)</label>
-            <div class="checkbox-group">
-              <label><input type="checkbox" name="need" value="food"> Food</label>
-              <label><input type="checkbox" name="need" value="shelter"> Shelter</label>
-              <label><input type="checkbox" name="need" value="medical"> Medical</label>
-              <label><input type="checkbox" name="need" value="employment"> Employment</label>
-              <label><input type="checkbox" name="need" value="legal"> Legal</label>
-            </div>
-          </div>
-        </div>
-        <button type="submit">Submit Anonymous Record</button>
-      </form>
-      <div class="success-message" id="successMessage" style="display: none; margin-top: 1rem; padding: 0.8rem; background: #d5f5e3; color: #27ae60; border-radius: 4px; font-size: 0.9rem;">
-        <strong>Your anonymous record submitted!</strong>
+    <!-- Right sidebar - countries/cities/needs -->
+    <section class="sidebar" style="margin-top: -70vh; padding: 1rem; max-height: 70vh; overflow-y: auto; direction: ltr;">
+      <div class="timeline-selector" style="margin-bottom: 1rem; padding: 0.5rem; background: var(--card-bg); border-radius: 6px; font-size: 0.85rem;">
+        <strong>Timeline:</strong> 
+        <select id="timelineSelect" style="margin-left: 0.5rem; padding: 0.3rem 0.5rem;">
+          <option value="daily">Daily</option>
+          <option value="weekly" selected>Weekly</option>
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+          <option value="5year">5 Year</option>
+        </select>
       </div>
+
+      <div class="section" style="margin-bottom: 1rem;">
+        <h3>Top Countries</h3>
+        <div id="topCountries" style="font-size: 0.85rem;"></div>
+      </div>
+
+      <div class="section" style="margin-bottom: 1rem;">
+        <h3>Top Cities</h3>
+        <div id="topCities" style="font-size: 0.85rem;"></div>
+      </div>
+
+      <div class="section" style="margin-bottom: 1rem;">
+        <h3>Top Needs</h3>
+        <div id="topNeeds" style="font-size: 0.85rem;"></div>
+      </div>
+
+      <!-- Breadcrumb area -->
+      <div id="breadcrumb" style="margin-top: 1rem; font-size: 0.8rem; color: var(--muted-color);"></div>
     </section>
   </main>
 
@@ -118,38 +68,6 @@
   </footer>
 
   <script>
-    // Check for saved theme preference or use OS preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const storedTheme = localStorage.getItem('theme');
-    const modeLight = document.getElementById('modeLight');
-    const modeDark = document.getElementById('modeDark');
-    
-    // Set initial theme
-    if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
-      document.body.classList.add('dark-mode');
-      modeLight.style.display = 'none';
-      modeDark.style.display = 'inline';
-    } else {
-      modeLight.style.display = 'inline';
-      modeDark.style.display = 'none';
-    }
-    
-    // Theme toggle
-    const modeToggle = document.querySelector('.mode-toggle');
-    modeToggle.addEventListener('click', () => {
-      if (document.body.classList.contains('dark-mode')) {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('theme', 'light');
-        modeLight.style.display = 'inline';
-        modeDark.style.display = 'none';
-      } else {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-        modeLight.style.display = 'none';
-        modeDark.style.display = 'inline';
-      }
-    });
-
     // Initialize data from localStorage
     let records = [];
     const storedRecords = localStorage.getItem('registryRecords');
@@ -157,123 +75,156 @@
       records = JSON.parse(storedRecords);
     }
     
+    // Sample global data for demonstration (in production, fetched from scraper)
+    const sampleGlobalData = {
+      countries: [
+        {name: "United States", count: 580000, change: -12000, isNegative: true},
+        {name: "India", count: 450000, change: 8000, isNegative: false},
+        {name: "Brazil", count: 220000, change: -5000, isNegative: true},
+        {name: "France", count: 150000, change: 3000, isNegative: false},
+        {name: "Australia", count: 110000, change: -2000, isNegative: true}
+      ],
+      cities: {
+        "United States": [
+          {name: "New York", count: 75000, change: -3000, isNegative: true},
+          {name: "Los Angeles", count: 52000, change: -2000, isNegative: true}
+        ],
+        "India": [
+          {name: "Mumbai", count: 180000, change: 5000, isNegative: false},
+          {name: "Delhi", count: 150000, change: 4000, isNegative: false}
+        ]
+      },
+      needs: ["food", "shelter", "medical", "employment", "legal"],
+      timelineFormats: {
+        daily: "Last 24 hours",
+        weekly: "Last 7 days",
+        monthly: "Last 30 days",
+        yearly: "Last 365 days",
+        5year: "Last 5 years"
+      }
+    };
+    
     // DOM Elements
-    const submissionForm = document.getElementById('submissionForm');
-    const aggregateView = document.getElementById('aggregateView');
+    const mapDiv = document.getElementById('map');
     const totalCount = document.getElementById('totalCount');
-    const uniqueCities = document.getElementById('uniqueCities');
-    const activeSituations = document.getElementById('activeSituations');
-    const cityList = document.getElementById('cityList');
-    const situationBreakdown = document.getElementById('situationBreakdown');
-    const durationBreakdown = document.getElementById('durationBreakdown');
+    const uniqueCities = document.querySelector('.count-card:nth(1) .number');
+    const activeSituations = document.querySelector('.count-card:nth(2) .number');
+    const timelineSelect = document.getElementById('timelineSelect');
+    const topCountriesDiv = document.getElementById('topCountries');
+    const topCitiesDiv = document.getElementById('topCities');
+    const topNeedsDiv = document.getElementById('topNeeds');
+    const breadcrumbDiv = document.getElementById('breadcrumb');
     
-    // Generate one-time anonymous token
-    function generateToken() {
-      return 'token-' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
-    }
-    
-    // Submit form handler
-    submissionForm.addEventListener('submit', function(e) {
-      e.preventDefault();
+    // Render global data
+    function renderGlobalData(timeline = 'weekly') {
+      const format = sampleGlobalData.timelineFormats[timeline] || 'Last 7 days';
+      topCountriesDiv.innerHTML = '';
+      topCitiesDiv.innerHTML = '';
+      topNeedsDiv.innerHTML = '';
       
-      const city = document.getElementById('city').value.trim();
-      const category = document.querySelector('input[name="category"]:checked')?.value;
-      const duration = document.querySelector('input[name="duration"]:checked')?.value;
-      const needs = [];
-      
-      document.querySelectorAll('input[name="need"]:checked').forEach(cb => needs.push(cb.value));
-      
-      if (!city) {
-        alert('Please enter a city');
-        return;
-      }
-      if (!category) {
-        alert('Please select a sleeping situation');
-        return;
-      }
-      if (!duration) {
-        alert('Please select a duration');
-        return;
-      }
-      
-      const record = {
-        id: generateToken(),
-        city: city,
-        category: category,
-        duration: duration,
-        needs: needs.length > 0 ? needs : null,
-        timestamp: new Date().toISOString()
-      };
-      
-      records.push(record);
-      saveRecords();
-      renderAggregates();
-      
-      // Show success with token
-      const successMsg = document.getElementById('successMessage');
-      successMsg.style.display = 'block';
-      successMsg.innerHTML = `
-        <strong>Your anonymous token:</strong> <code>${record.id}</code><br>
-        <strong>Keep this token safe.</strong><br>
-        <a href="?token=${record.id}">Use this token</a> to delete your record later.
-      `;
-      
-      submissionForm.reset();
-    });
-    
-    // Save records to localStorage
-    function saveRecords() {
-      localStorage.setItem('registryRecords', JSON.stringify(records));
-    }
-    
-    // Render aggregate counts
-    function renderAggregates() {
-      if (records.length === 0) {
-        aggregateView.style.display = 'none';
-        submissionForm.style.display = 'block';
-        return;
-      }
-      
-      aggregateView.style.display = 'block';
-      submissionForm.style.display = 'none';
-      
-      const totalRecords = records.length;
-      const uniqueCitiesCount = new Set(records.map(r => r.city.toLowerCase().trim())).size;
-      
-      totalCount.textContent = totalRecords;
-      uniqueCities.textContent = uniqueCitiesCount;
-      activeSituations.textContent = totalRecords;
-      
-      // By category counts
-      const byCategory = { rough_sleeping: 0, vehicle: 0, couch: 0, other: 0 };
-      const durationMap = { less_than_week: 0, '1_4_weeks': 0, '1_3_months': 0, '3_plus_months': 0 };
-      
-      records.forEach(record => {
-        if (byCategory[record.category] !== undefined) {
-          byCategory[record.category]++;
-        }
-        if (durationMap[record.duration] !== undefined) {
-          durationMap[record.duration]++;
-        }
+      // Top countries
+      sampleGlobalData.countries.slice(0, 10).forEach((country, i) => {
+        const changeClass = country.isNegative ? 'negative' : 'positive';
+        const changeText = country.isNegative ? '↓' : '↑';
+        const countryDiv = document.createElement('div');
+        countryDiv.style.cssText = `margin: 0.2rem 0; padding: 0.2rem; cursor: pointer; border-radius: 4px; transition: background 0.2s;`;
+        countryDiv.title = country.name;
+        countryDiv.innerHTML = `<strong style="color: var(--primary-color);">${country.name}</strong> <span style="color: var(${country.isNegative ? '--accent-color' : '--secondary-color')};">${country.count}</span> <span class="${changeClass}">${changeText}${Math.abs(country.change)}</span>`;
+        countryDiv.onclick = () => showCountryPage(country.name);
+        topCountriesDiv.appendChild(countryDiv);
       });
       
-      situationBreakdown.innerHTML = `
-        <div><strong>rough sleeping:</strong> ${byCategory.rough_sleeping}</div>
-        <div><strong>vehicle:</strong> ${byCategory.vehicle}</div>
-        <div><strong>couch:</strong> ${byCategory.couch}</div>
-        <div><strong>other:</strong> ${byCategory.other}</div>
-      `;
+      // Top cities (for first country shown)
+      const firstCountry = sampleGlobalData.countries[0].name;
+      const cities = sampleGlobalData.cities[firstCountry] || [];
+      topCitiesDiv.innerHTML = `<em>Select a country to see top cities</em>`;
+      if (cities.length > 0) {
+        topCitiesDiv.innerHTML = '';
+        cities.slice(0, 5).forEach(city => {
+          const cityDiv = document.createElement('div');
+          cityDiv.style.cssText = `margin: 0.2rem 0; padding: 0.2rem; cursor: pointer; border-radius: 4px;`;
+          cityDiv.title = city.name;
+          cityDiv.innerHTML = `<strong>${city.name}</strong> <span>${city.count}</span> <span class="${city.isNegative ? 'negative' : 'positive'}">${city.isNegative ? '↓' : '↑'}${Math.abs(city.change)}</span>`;
+          cityDiv.onclick = () => showCityPage(firstCountry, city.name);
+          topCitiesDiv.appendChild(cityDiv);
+        });
+      }
       
-      durationBreakdown.innerHTML = `
-        <div><strong>less than week:</strong> ${durationMap.less_than_week}</div>
-        <div><strong>1-4 weeks:</strong> ${durationMap['1_4_weeks']}</div>
-        <div><strong>1-3 months:</strong> ${durationMap['1_3_months']}</div>
-        <div><strong>3+ months:</strong> ${durationMap['3_plus_months']}</div>
-      `;
+      // Top needs
+      topNeedsDiv.innerHTML = '<em>Needs data available per record submission</em>';
+    }
+    
+    function showCountryPage(countryName) {
+      // Update breadcrumb
+      breadcrumbDiv.innerHTML = `<a href="javascript:homePage()">World</a> > ${countryName}`;
+      
+      // Hide sidebar content, show country-focused content
+      topCountriesDiv.innerHTML = '';
+      topCitiesDiv.innerHTML = '';
+      
+      // Show top cities for this country
+      const cities = sampleGlobalData.cities[countryName] || [];
+      topCitiesDiv.innerHTML = '';
+      if (cities.length > 0) {
+        topCitiesDiv.style.display = 'block';
+        cities.slice(0, 5).forEach(city => {
+          const isNeg = city.change < 0;
+          const cityDiv = document.createElement('div');
+          cityDiv.style.cssText = `margin: 0.3rem 0; padding: 0.3rem; background: var(--bg-color); border-radius: 4px; cursor: pointer;`;
+          cityDiv.innerHTML = `<strong>${city.name}</span> <span>${city.count}</span> <span class="${isNeg ? 'negative' : 'positive'}">${city.isNegative ? '↓' : '↑'}${Math.abs(city.change)}</span>`;
+          cityDiv.onclick = () => showCityPage(countryName, city.name);
+          topCitiesDiv.appendChild(cityDiv);
+        });
+      } else {
+        topCitiesDiv.style.display = 'none';
+      }
+      
+      // Show states (placeholder - would be more detailed in full implementation)
+      topNeedsDiv.innerHTML = `<strong>States in ${countryName}:</strong> Data being loaded...`;
+      
+      // Update headline
+      document.querySelector('h1').textContent = `Homelessness in ${countryName}`;
+    }
+    
+    function showCityPage(countryName, cityName) {
+      breadcrumbDiv.innerHTML = `<a href="javascript:homePage()">World</a> > ${countryName} > ${cityName}`;
+      document.querySelector('h1').textContent = `Homelessness in ${cityName}, ${countryName}`;
+      topCountriesDiv.innerHTML = `<em>Click a country to return to global view</em>`;
+      topCitiesDiv.innerHTML = `<em>Detailed city statistics loading...</em>`;
+      topNeedsDiv.innerHTML = `<em>Needs: Data per submission records</em>`;
+    }
+    
+    function homePage() {
+      breadcrumbDiv.innerHTML = '';
+      document.querySelector('h1').textContent = `Anonymous Homeless Registry`;
+      renderGlobalData(timelineSelect.value);
+      topCitiesDiv.style.display = 'none';
     }
     
     // Initialize on load
-    renderAggregates();
+    renderGlobalData('weekly');
+    
+    // Timeline change handler
+    timelineSelect.addEventListener('change', () => renderGlobalData(timelineSelect.value));
+    
+    // Country click handler
+    document.querySelectorAll('#topCountries div').forEach(el => {
+      el.onclick = (e) => {
+        const countryName = el.querySelector('strong').textContent;
+        showCountryPage(countryName);
+      };
+    });
+    
+    // City click handler
+    document.querySelectorAll('#topCities div').forEach(el => {
+      el.onclick = (e) => {
+        const countryName = el.previousElementSibling ? 
+          el.previousElementSibling.textContent.split('>')[1] || 'United States' : 
+          'United States';
+        const cityName = el.querySelector('strong').textContent;
+        showCityPage(countryName, cityName);
+      };
+    });
   </script>
   
   <script src="app.js"></script>
