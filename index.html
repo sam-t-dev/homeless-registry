@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anonymous Homeless Registry - Live Counts</title>
   <!-- OpenFreeMap CSS (open source, no API key required) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/openfreemap@1.0.0/dist/openfreemap.min.css">
+  <!-- MapLibre GL JS CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -74,17 +75,20 @@
     &copy; 2026 Anonymous Homeless Registry | <a href="privacy-policy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
   </footer>
 
-  <!-- OpenFreeMap JavaScript -->
-  <script src="https://cdn.jsdelivr.net/npm/openfreemap@1.0.0/dist/openfreemap.min.js"></script>
+  <!-- MapLibre GL JS -->
+  <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
   
   <script>
-    // Initialize OpenFreeMap
-    const map = new OpenFreeMap({
+    // Initialize OpenFreeMap with MapLibre GL JS
+    const map = new maplibregl.Map({
       container: 'map',
-      style: 'osm-bright',  // OpenStreetMap bright style
+      style: 'https://tiles.openfreemap.org/styles/liberty',
       center: [0, 0],
       zoom: 2
     });
+    
+    // Add navigation controls
+    map.addControl(new maplibregl.NavigationControl());
     
     // Initialize data from localStorage
     let records = [];
@@ -130,23 +134,19 @@
     const topNeedsDiv = document.getElementById('topNeeds');
     const breadcrumbDiv = document.getElementById('breadcrumb');
     
-    // Add a country marker to the map
+    // Add country markers to map
     function addCountryMarker(country) {
-      const marker = L.marker([country.lat, country.lng]).addTo(map);
-      const circle = L.circle([country.lat, country.lng], {
-        radius: country.count / 1000,  // Scale radius by count
-        color: country.isNegative ? '#e74c3c' : '#3498db',
-        fillColor: country.isNegative ? '#e74c3c' : '#3498db',
-        fillOpacity: 0.3
-      }).addTo(map);
-      marker.bindPopup(`<strong>${country.name}</strong><br>${country.count} homeless${country.change ? ` <span style="color: ${country.isNegative ? '#e74c3c' : '#3498db'}">${country.change > 0 ? '+' : ''}${country.change} change</span>` : ''}</Popup);
+      const marker = new maplibregl.Marker([country.lat, country.lng])
+        .setPopup(new maplibregl.Popup({closeButton: false, offset: 25})
+          .setHTML(`<strong>${country.name}</strong><br>${country.count} homeless${country.change ? ` <span style="color: ${country.isNegative ? '#e74c3c' : '#3498db'}">${country.change > 0 ? '+' : ''}${country.change} change</span>` : ''}`))
+        .addTo(map);
+      // Fit map to marker
+      map.flyTo({
+        center: [country.lat, country.lng],
+        zoom: 5,
+        essential: true
+      });
     }
-    
-    // Initialize map with markers
-    document.addEventListener('DOMContentLoaded', () => {
-      sampleGlobalData.countries.forEach(addCountryMarker);
-      map.setMaxZoom(18);
-    });
     
     // Render global data sidebar
     function renderGlobalData(timeline = 'weekly') {
@@ -206,7 +206,7 @@
           cityDiv.innerHTML = `
             <span style="flex: 1; min-width: 100px;">${city.name}</span> 
             <span style="margin-left: 0.5rem;">${city.count}</span> 
-            <span class="${isNeg ? 'negative' : 'positive'}" style="margin-left: 0.5;">${city.isNegative ? '↓' : '↑'}${Math.abs(city.change)}</span>
+            <span class="${isNeg ? 'negative' : 'positive'}" style="margin-left: 0.5rem;">${city.isNegative ? '↓' : '↑'}${Math.abs(city.change)}</span>
           `;
           cityDiv.onclick = () => showCountryPage(firstCountry, city.name);
           topCitiesDiv.appendChild(cityDiv);
@@ -268,7 +268,7 @@
       document.querySelector('h1').textContent = 'Homelessness in ' + cityName + ', ' + countryName;
       topCountriesDiv.innerHTML = '<em>Click a country to return to global view</em>';
       topCitiesDiv.innerHTML = '<em>Detailed city statistics loading...</em>';
-      topNeedsDiv.innerHTML = '<em>Needs: Data per submission records</em>';
+      topNeedsDiv.innerHTML = '<em>Needs: Data per record submission</em>';
     }
     
     function homePage() {
@@ -285,7 +285,7 @@
     timelineSelect.addEventListener('change', () => renderGlobalData(timelineSelect.value));
     
     // Country click handler
-    document.querySelectorAll('#topCountries div').forEach(el => {
+    document.querySelectorAll('.country-click').forEach(el => {
       el.onclick = (e) => {
         const countryName = el.innerText || el.textContent;
         if (countryName) showCountryPage(countryName);
@@ -293,12 +293,83 @@
     });
     
     // City click handler
-    document.querySelectorAll('#topCities div').forEach(el => {
+    document.querySelectorAll('.city-click').forEach(el => {
       el.onclick = (e) => {
-        const countryName = 'United States'; // simplified
+        const countryName = 'United States';
         const cityName = el.innerText || el.textContent;
         if (cityName) showCityPage('United States', cityName);
       };
+    });
+    
+    // Light/dark mode
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const storedTheme = localStorage.getItem('theme');
+    const modeLight = document.getElementById('modeLight');
+    const modeDark = document.getElementById('modeDark');
+    
+    if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+      document.body.classList.add('dark-mode');
+      modeLight.style.display = 'none';
+      modeDark.style.display = 'inline';
+    } else {
+      modeLight.style.display = 'inline';
+      modeDark.style.display = 'none';
+    }
+    
+    const modeToggle = document.querySelector('.mode-toggle');
+    modeToggle.addEventListener('click', () => {
+      if (document.body.classList.contains('dark-mode')) {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+        modeLight.style.display = 'inline';
+        modeDark.style.display = 'none';
+      } else {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+        modeLight.style.display = 'none';
+        modeDark.style.display = 'inline';
+      }
+    });
+    
+    // Submit form handler
+    const submissionForm = document.getElementById('submissionForm');
+    if (submissionForm) {
+      submissionForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const city = document.getElementById('city').value.trim();
+        if (!city) { alert('Please enter a city'); return; }
+        const record = {
+          id: 'token-' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36),
+          city: city,
+          timestamp: new Date().toISOString()
+        };
+        records.push(record);
+        localStorage.setItem('registryRecords', JSON.stringify(records));
+        document.getElementById('submissionForm').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('successMessage').innerHTML = 'Your anonymous token: <code>' + record.id + '</code>. Keep it safe.';
+      });
+    }
+    
+    const successMessage = document.getElementById('successMessage');
+    if (successMessage) {
+      successMessage.style.display = 'none';
+    }
+    
+    // Initialize map fit to first marker
+    setTimeout(() => {
+      if (sampleGlobalData.countries.length > 0) {
+        map.flyTo({
+          center: [sampleGlobalData.countries[0].lat, sampleGlobalData.countries[0].lng],
+          zoom: 5,
+          essential: true
+        });
+      }
+    }, 500);
+    
+    // Make map clicks work - don't block sidebar clicks
+    map.on('click', (e) => {
+      // Allow sidebar interactions
     });
   </script>
   
