@@ -3,70 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- OpenFreeMap CSS (open source, no API key required) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/openfreemap@1.0.0/dist/openfreemap.min.css">
-  <!-- MapLibre GL JS CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
+  <title>Anonymous Homeless Registry - Live Counts</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="mode-toggle" style="position: fixed; top: 20px; right: 20px; background: var(--card-bg); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem;">
-    <span id="modeLight" style="display: inline; opacity: 0.7;">☾ Light</span>
-    <span id="modeDark" style="display: none; opacity: 0.7;">☀ Dark</span>
-  </div>
-
   <header>
     <h1>Anonymous Homeless Registry</h1>
     <p>Live aggregate counts of homelessness by city and situation</p>
   </header>
 
   <main>
-    <!-- Map section - front and center, takes up most of the screen -->
-    <section class="map-section">
-      <div id="map" style="width: 100%; height: 70vh; position: relative;"></div>
-      <div class="map-legend" style="position: absolute; bottom: 20px; left: 20px; background: var(--card-bg); padding: 1rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); z-index: 1000; font-size: 0.85rem;">
-        <strong>Legend</strong><br>
-        <i style="background: #3498db; width: 16px; height: 16px; display: inline-block; margin-right: 4px;"></i> Rough sleeping<br>
-        <i style="background: #9b59b6; width: 16px; height: 16px; display: inline-block; margin-right: 4px;"></i> Vehicle<br>
-        <i style="background: #e67e22; width: 16px; height: 16px; display: inline-block; margin-right: 4px;"></i> Couch surfing<br>
-        <i style="background: #95a5a6; width: 16px; height: 16px; display: inline-block; margin-right: 4px;"></i> Other
-      </div>
-    </section>
-
-    <!-- Right sidebar - countries/cities/needs -->
-    <section class="sidebar" style="margin-top: -70vh; padding: 1rem; max-height: 70vh; overflow-y: auto; direction: ltr;">
-      <div class="timeline-selector" style="margin-bottom: 1rem; padding: 0.5rem; background: var(--card-bg); border-radius: 6px; font-size: 0.85rem;">
-        <strong>Timeline:</strong> 
-        <select id="timelineSelect" style="margin-left: 0.5rem; padding: 0.3rem 0.5rem;">
-          <option value="daily">Daily</option>
-          <option value="weekly" selected>Weekly</option>
-          <option value="monthly">Monthly</option>
-          <option value="yearly">Yearly</option>
-          <option value="5year">5 Year</option>
-        </select>
+    <section class="aggregate-view">
+      <div class="counts">
+        <div class="count-card">
+          <h3>Total Records</h3>
+          <div class="number">0</div>
+        </div>
+        <div class="count-card">
+          <h3>Unique Cities</h3>
+          <div class="number">0</div>
+        </div>
+        <div class="count-card">
+          <h3>Active Situations</h3>
+          <div class="number">0</div>
+        </div>
       </div>
 
-      <div class="section" style="margin-bottom: 1rem;">
-        <h3>Top Countries</h3>
-        <div id="topCountries" style="font-size: 0.85rem;"></div>
+      <div class="city-breakdown">
+        <h4>By City</h4>
+        <ul>
+          
+          
+        </ul>
       </div>
 
-      <div class="section" style="margin-bottom: 1rem;">
-        <h3>Top Cities</h3>
-        <div id="topCities" style="font-size: 0.85rem;"></div>
-      </div>
-
-      <div class="section" style="margin-bottom: 1rem;">
-        <h3>Top Needs</h3>
-        <div id="topNeeds" style="font-size: 0.85rem;"></div>
-      </div>
-
-      <!-- Breadcrumb area -->
-      <div id="breadcrumb" style="margin-top: 1rem; font-size: 0.8rem; color: var(--muted-color);"></div>
-      
-      <!-- Add to Registry CTA -->
-      <div class="add-registry-cta" style="margin-top: 1rem; padding: 1rem; background: var(--primary-color); color: white; border-radius: 8px; font-size: 0.9rem;">
-        <strong>Add Your Situation</strong> <a href="#" style="color: white; text-decoration: underline;" onclick="document.getElementById('submissionForm').style.display='block'">here</a>
+      <div class="counts" style="margin-top: 2rem;">
+        <div class="count-card">
+          <h3>By Situation</h3>
+          <div><strong>rough sleeping:</strong> 0</div><div><strong>vehicle:</strong> 0</div><div><strong>couch:</strong> 0</div><div><strong>other:</strong> 0</div>
+        </div>
+        <div class="count-card">
+          <h3>By Duration</h3>
+          <div><strong>less than week:</strong> 0</div><div><strong>1 4 weeks:</strong> 0</div><div><strong>1 3 months:</strong> 0</div><div><strong>3 plus months:</strong> 0</div>
+        </div>
       </div>
     </section>
   </main>
@@ -75,304 +54,6 @@
     &copy; 2026 Anonymous Homeless Registry | <a href="privacy-policy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
   </footer>
 
-  <!-- MapLibre GL JS -->
-  <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
-  
-  <script>
-    // Initialize OpenFreeMap with MapLibre GL JS
-    const map = new maplibregl.Map({
-      container: 'map',
-      style: 'https://tiles.openfreemap.org/styles/liberty',
-      center: [0, 0],
-      zoom: 2
-    });
-    
-    // Add navigation controls
-    map.addControl(new maplibregl.NavigationControl());
-    
-    // Initialize data from localStorage
-    let records = [];
-    const storedRecords = localStorage.getItem('registryRecords');
-    if (storedRecords) {
-      records = JSON.parse(storedRecords);
-    }
-    
-    // Sample global data for demonstration
-    const sampleGlobalData = {
-      countries: [
-        {name: "United States", count: 580000, change: -12000, lat: 38, lng: -97, isNegative: true},
-        {name: "India", count: 450000, change: 8000, lat: 21, lng: 78, isNegative: false},
-        {name: "Brazil", count: 220000, change: -5000, lat: -14, lng: -50, isNegative: true},
-        {name: "France", count: 150000, change: 3000, lat: 46, lng: 2, isNegative: false},
-        {name: "Australia", count: 110000, change: -2000, lat: -25, lng: 133, isNegative: true}
-      ],
-      cities: {
-        "United States": [
-          {name: "New York", count: 75000, change: -3000, lat: 40.71, lng: -74.01, isNegative: true},
-          {name: "Los Angeles", count: 52000, change: -2000, lat: 34.05, lng: -118.25, isNegative: true}
-        ],
-        "India": [
-          {name: "Mumbai", count: 180000, change: 5000, lat: 19.07, lng: 72.87, isNegative: false},
-          {name: "Delhi", count: 150000, change: 4000, lat: 28.7, lng: 77.1, isNegative: false}
-        ]
-      },
-      needs: ["food", "shelter", "medical", "employment", "legal"],
-      timelineFormats: {
-        daily: "Last 24 hours",
-        weekly: "Last 7 days",
-        monthly: "Last 30 days",
-        yearly: "Last 365 days",
-        5year: "Last 5 years"
-      }
-    };
-    
-    // DOM Elements
-    const mapDiv = document.getElementById('map');
-    const timelineSelect = document.getElementById('timelineSelect');
-    const topCountriesDiv = document.getElementById('topCountries');
-    const topCitiesDiv = document.getElementById('topCities');
-    const topNeedsDiv = document.getElementById('topNeeds');
-    const breadcrumbDiv = document.getElementById('breadcrumb');
-    
-    // Add country markers to map
-    function addCountryMarker(country) {
-      const marker = new maplibregl.Marker([country.lat, country.lng])
-        .setPopup(new maplibregl.Popup({closeButton: false, offset: 25})
-          .setHTML(`<strong>${country.name}</strong><br>${country.count} homeless${country.change ? ` <span style="color: ${country.isNegative ? '#e74c3c' : '#3498db'}">${country.change > 0 ? '+' : ''}${country.change} change</span>` : ''}`))
-        .addTo(map);
-      // Fit map to marker
-      map.flyTo({
-        center: [country.lat, country.lng],
-        zoom: 5,
-        essential: true
-      });
-    }
-    
-    // Render global data sidebar
-    function renderGlobalData(timeline = 'weekly') {
-      const format = sampleGlobalData.timelineFormats[timeline] || 'Last 7 days';
-      topCountriesDiv.innerHTML = '';
-      topCitiesDiv.innerHTML = '';
-      topNeedsDiv.innerHTML = '';
-      
-      // Top countries with clickable cards
-      sampleGlobalData.countries.slice(0, 10).forEach((country, i) => {
-        const isNegative = country.change < 0;
-        const changeClass = isNegative ? 'negative' : 'positive';
-        const changeText = isNegative ? '↓' : '↑';
-        const countryDiv = document.createElement('div');
-        countryDiv.style.cssText = `
-          margin: 0.2rem 0; 
-          padding: 0.2rem; 
-          cursor: pointer; 
-          border-radius: 4px; 
-          transition: background 0.2s;
-          background: var(--bg-color);
-          min-height: 36px;
-          display: flex;
-          align-items: center;
-        `;
-        countryDiv.title = country.name;
-        countryDiv.innerHTML = `
-          <span style="flex: 1; min-width: 120px; color: var(--primary-color);">${country.name}</span> 
-          <span style="color: var(${isNegative ? '--accent-color' : '--secondary-color'}); flex: 0 0 80px;">${country.count}</span> 
-          <span class="${changeClass}" style="margin-left: 0.5rem; flex: 0 0 40px;">${changeText}${Math.abs(country.change)}</span>
-        `;
-        countryDiv.onclick = () => showCountryPage(country.name);
-        topCountriesDiv.appendChild(countryDiv);
-      });
-      
-      // Top cities for first country
-      const firstCountry = sampleGlobalData.countries[0].name;
-      const cities = sampleGlobalData.cities[firstCountry] || [];
-      topCitiesDiv.innerHTML = '';
-      if (cities.length > 0) {
-        topCitiesDiv.style.display = 'block';
-        topCitiesDiv.innerHTML = '<strong>Top Cities in ' + firstCountry + ':</strong>';
-        cities.slice(0, 5).forEach(city => {
-          const isNeg = city.change < 0;
-          const cityDiv = document.createElement('div');
-          cityDiv.style.cssText = `
-            margin: 0.2rem 0; 
-            padding: 0.2rem; 
-            background: var(--bg-color); 
-            border-radius: 4px; 
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            min-height: 36px;
-          `;
-          cityDiv.title = city.name;
-          cityDiv.innerHTML = `
-            <span style="flex: 1; min-width: 100px;">${city.name}</span> 
-            <span style="margin-left: 0.5rem;">${city.count}</span> 
-            <span class="${isNeg ? 'negative' : 'positive'}" style="margin-left: 0.5rem;">${city.isNegative ? '↓' : '↑'}${Math.abs(city.change)}</span>
-          `;
-          cityDiv.onclick = () => showCountryPage(firstCountry, city.name);
-          topCitiesDiv.appendChild(cityDiv);
-        });
-      } else {
-        topCitiesDiv.style.display = 'none';
-        topCitiesDiv.innerHTML = '<em>Select a country to see top cities</em>';
-      }
-      
-      // Top needs
-      topNeedsDiv.innerHTML = '<em>Needs: Data per record submission</em>';
-    }
-    
-    function showCountryPage(countryName) {
-      const countryDiv = sampleGlobalData.countries.find(c => c.name === countryName);
-      breadcrumbDiv.innerHTML = `<a href="javascript:homePage()">World</a> > ${countryName} ${countryDiv ? `(${countryDiv.count} homeless)` : ''}`;
-      
-      topCountriesDiv.innerHTML = '';
-      topCitiesDiv.innerHTML = '';
-      
-      const cities = sampleGlobalData.cities[countryName] || [];
-      topCitiesDiv.style.display = 'block';
-      if (cities.length > 0) {
-        topCitiesDiv.innerHTML = '<strong>Top Cities in ' + countryName + ':</strong>';
-        cities.slice(0, 5).forEach(city => {
-          const isNeg = city.change < 0;
-          const cityDiv = document.createElement('div');
-          cityDiv.style.cssText = `
-            margin: 0.3rem 0; 
-            padding: 0.3rem; 
-            background: var(--bg-color); 
-            border-radius: 4px; 
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            min-height: 36px;
-          `;
-          cityDiv.title = city.name;
-          cityDiv.innerHTML = `
-            <span style="flex: 1; min-width: 100px;">${city.name}</span> 
-            <span style="margin-left: 0.5rem;">${city.count}</span> 
-            <span class="${isNeg ? 'negative' : 'positive'}" style="margin-left: 0.5rem;">${city.isNegative ? '↓' : '↑'}${Math.abs(city.change)}</span>
-          `;
-          cityDiv.onclick = () => showCityPage(countryName, city.name);
-          topCitiesDiv.appendChild(cityDiv);
-        });
-      } else {
-        topCitiesDiv.style.display = 'none';
-        topCitiesDiv.innerHTML = '<em>No city data available</em>';
-      }
-      
-      topNeedsDiv.innerHTML = '<strong>States in ' + countryName + ':</strong> Data being loaded...';
-      
-      document.querySelector('h1').textContent = 'Homelessness in ' + countryName;
-    }
-    
-    function showCityPage(countryName, cityName) {
-      breadcrumbDiv.innerHTML = `<a href="javascript:homePage()">World</a> > ${countryName} > ${cityName}`;
-      document.querySelector('h1').textContent = 'Homelessness in ' + cityName + ', ' + countryName;
-      topCountriesDiv.innerHTML = '<em>Click a country to return to global view</em>';
-      topCitiesDiv.innerHTML = '<em>Detailed city statistics loading...</em>';
-      topNeedsDiv.innerHTML = '<em>Needs: Data per record submission</em>';
-    }
-    
-    function homePage() {
-      breadcrumbDiv.innerHTML = '';
-      document.querySelector('h1').textContent = 'Anonymous Homeless Registry';
-      renderGlobalData(timelineSelect.value);
-      topCitiesDiv.style.display = 'none';
-    }
-    
-    // Initialize on load
-    renderGlobalData('weekly');
-    
-    // Timeline change handler
-    timelineSelect.addEventListener('change', () => renderGlobalData(timelineSelect.value));
-    
-    // Country click handler
-    document.querySelectorAll('.country-click').forEach(el => {
-      el.onclick = (e) => {
-        const countryName = el.innerText || el.textContent;
-        if (countryName) showCountryPage(countryName);
-      };
-    });
-    
-    // City click handler
-    document.querySelectorAll('.city-click').forEach(el => {
-      el.onclick = (e) => {
-        const countryName = 'United States';
-        const cityName = el.innerText || el.textContent;
-        if (cityName) showCityPage('United States', cityName);
-      };
-    });
-    
-    // Light/dark mode
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const storedTheme = localStorage.getItem('theme');
-    const modeLight = document.getElementById('modeLight');
-    const modeDark = document.getElementById('modeDark');
-    
-    if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
-      document.body.classList.add('dark-mode');
-      modeLight.style.display = 'none';
-      modeDark.style.display = 'inline';
-    } else {
-      modeLight.style.display = 'inline';
-      modeDark.style.display = 'none';
-    }
-    
-    const modeToggle = document.querySelector('.mode-toggle');
-    modeToggle.addEventListener('click', () => {
-      if (document.body.classList.contains('dark-mode')) {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('theme', 'light');
-        modeLight.style.display = 'inline';
-        modeDark.style.display = 'none';
-      } else {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-        modeLight.style.display = 'none';
-        modeDark.style.display = 'inline';
-      }
-    });
-    
-    // Submit form handler
-    const submissionForm = document.getElementById('submissionForm');
-    if (submissionForm) {
-      submissionForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const city = document.getElementById('city').value.trim();
-        if (!city) { alert('Please enter a city'); return; }
-        const record = {
-          id: 'token-' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36),
-          city: city,
-          timestamp: new Date().toISOString()
-        };
-        records.push(record);
-        localStorage.setItem('registryRecords', JSON.stringify(records));
-        document.getElementById('submissionForm').style.display = 'none';
-        document.getElementById('successMessage').style.display = 'block';
-        document.getElementById('successMessage').innerHTML = 'Your anonymous token: <code>' + record.id + '</code>. Keep it safe.';
-      });
-    }
-    
-    const successMessage = document.getElementById('successMessage');
-    if (successMessage) {
-      successMessage.style.display = 'none';
-    }
-    
-    // Initialize map fit to first marker
-    setTimeout(() => {
-      if (sampleGlobalData.countries.length > 0) {
-        map.flyTo({
-          center: [sampleGlobalData.countries[0].lat, sampleGlobalData.countries[0].lng],
-          zoom: 5,
-          essential: true
-        });
-      }
-    }, 500);
-    
-    // Make map clicks work - don't block sidebar clicks
-    map.on('click', (e) => {
-      // Allow sidebar interactions
-    });
-  </script>
-  
   <script src="app.js"></script>
 </body>
 </html>
