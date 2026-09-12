@@ -7,45 +7,108 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="mode-toggle" style="position: fixed; top: 20px; right: 20px; background: var(--card-bg); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem;">
+    <span id="modeLight" style="display: inline; opacity: 0.7;">☾ Light</span>
+    <span id="modeDark" style="display: none; opacity: 0.7;">☀ Dark</span>
+  </div>
+
   <header>
     <h1>Anonymous Homeless Registry</h1>
     <p>Live aggregate counts of homelessness by city and situation</p>
   </header>
 
   <main>
-    <section class="aggregate-view">
+    <section class="aggregate-view" id="aggregateView">
       <div class="counts">
         <div class="count-card">
           <h3>Total Records</h3>
-          <div class="number">0</div>
+          <div class="number" id="totalCount">0</div>
         </div>
         <div class="count-card">
           <h3>Unique Cities</h3>
-          <div class="number">0</div>
+          <div class="number" id="uniqueCities">0</div>
         </div>
         <div class="count-card">
           <h3>Active Situations</h3>
-          <div class="number">0</div>
+          <div class="number" id="activeSituations">0</div>
         </div>
       </div>
 
       <div class="city-breakdown">
         <h4>By City</h4>
-        <ul>
-          
-          
+        <ul id="cityList">
+          <!-- Dynamically generated -->
         </ul>
+        <div class="hint">No data yet — submit a situation above</div>
       </div>
 
       <div class="counts" style="margin-top: 2rem;">
         <div class="count-card">
           <h3>By Situation</h3>
-          <div><strong>rough sleeping:</strong> 0</div><div><strong>vehicle:</strong> 0</div><div><strong>couch:</strong> 0</div><div><strong>other:</strong> 0</div>
+          <div id="situationBreakdown">
+            <div><strong>rough sleeping:</strong> 0</div>
+            <div><strong>vehicle:</strong> 0</div>
+            <div><strong>couch:</strong> 0</div>
+            <div><strong>other:</strong> 0</div>
+          </div>
         </div>
         <div class="count-card">
           <h3>By Duration</h3>
-          <div><strong>less than week:</strong> 0</div><div><strong>1 4 weeks:</strong> 0</div><div><strong>1 3 months:</strong> 0</div><div><strong>3 plus months:</strong> 0</div>
+          <div id="durationBreakdown">
+            <div><strong>less than week:</strong> 0</div>
+            <div><strong>1-4 weeks:</strong> 0</div>
+            <div><strong>1-3 months:</strong> 0</div>
+            <div><strong>3+ months:</strong> 0</div>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Submission Form -->
+    <section class="submission-form" id="submissionForm" style="display: block;">
+      <h3>Share Your Situation</h3>
+      <form>
+        <div class="form-row">
+          <div class="form-group required">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" placeholder="e.g. Sydney" required>
+          </div>
+          <div class="form-group required">
+            <label for="category">Sleeping Situation</label>
+            <div class="checkbox-group">
+              <label><input type="radio" name="category" value="rough_sleeping" required> Rough sleeping</label>
+              <label><input type="radio" name="category" value="vehicle" required> Vehicle/van</label>
+              <label><input type="radio" name="category" value="couch" required> Couch surfing</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group required">
+            <label for="duration">Duration</label>
+            <div class="checkbox-group">
+              <label><input type="radio" name="duration" value="less_than_week" required> Less than 1 week</label>
+              <label><input type="radio" name="duration" value="1_4_weeks" required> 1-4 weeks</label>
+              <label><input type="radio" name="duration" value="1_3_months" required> 1-3 months</label>
+              <label><input type="radio" name="duration" value="3_plus_months" required> 3+ months</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="needs">Needs (check all that apply)</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="need" value="food"> Food</label>
+              <label><input type="checkbox" name="need" value="shelter"> Shelter</label>
+              <label><input type="checkbox" name="need" value="medical"> Medical</label>
+              <label><input type="checkbox" name="need" value="employment"> Employment</label>
+              <label><input type="checkbox" name="need" value="legal"> Legal</label>
+            </div>
+          </div>
+        </div>
+        <button type="submit">Submit Anonymous Record</button>
+      </form>
+      <div class="success-message" id="successMessage" style="display: none; margin-top: 1rem; padding: 0.8rem; background: #d5f5e3; color: #27ae60; border-radius: 4px; font-size: 0.9rem;">
+        <strong>Your anonymous record submitted!</strong>
       </div>
     </section>
   </main>
@@ -54,6 +117,165 @@
     &copy; 2026 Anonymous Homeless Registry | <a href="privacy-policy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
   </footer>
 
+  <script>
+    // Check for saved theme preference or use OS preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const storedTheme = localStorage.getItem('theme');
+    const modeLight = document.getElementById('modeLight');
+    const modeDark = document.getElementById('modeDark');
+    
+    // Set initial theme
+    if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+      document.body.classList.add('dark-mode');
+      modeLight.style.display = 'none';
+      modeDark.style.display = 'inline';
+    } else {
+      modeLight.style.display = 'inline';
+      modeDark.style.display = 'none';
+    }
+    
+    // Theme toggle
+    const modeToggle = document.querySelector('.mode-toggle');
+    modeToggle.addEventListener('click', () => {
+      if (document.body.classList.contains('dark-mode')) {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+        modeLight.style.display = 'inline';
+        modeDark.style.display = 'none';
+      } else {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+        modeLight.style.display = 'none';
+        modeDark.style.display = 'inline';
+      }
+    });
+
+    // Initialize data from localStorage
+    let records = [];
+    const storedRecords = localStorage.getItem('registryRecords');
+    if (storedRecords) {
+      records = JSON.parse(storedRecords);
+    }
+    
+    // DOM Elements
+    const submissionForm = document.getElementById('submissionForm');
+    const aggregateView = document.getElementById('aggregateView');
+    const totalCount = document.getElementById('totalCount');
+    const uniqueCities = document.getElementById('uniqueCities');
+    const activeSituations = document.getElementById('activeSituations');
+    const cityList = document.getElementById('cityList');
+    const situationBreakdown = document.getElementById('situationBreakdown');
+    const durationBreakdown = document.getElementById('durationBreakdown');
+    
+    // Generate one-time anonymous token
+    function generateToken() {
+      return 'token-' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+    }
+    
+    // Submit form handler
+    submissionForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const city = document.getElementById('city').value.trim();
+      const category = document.querySelector('input[name="category"]:checked')?.value;
+      const duration = document.querySelector('input[name="duration"]:checked')?.value;
+      const needs = [];
+      
+      document.querySelectorAll('input[name="need"]:checked').forEach(cb => needs.push(cb.value));
+      
+      if (!city) {
+        alert('Please enter a city');
+        return;
+      }
+      if (!category) {
+        alert('Please select a sleeping situation');
+        return;
+      }
+      if (!duration) {
+        alert('Please select a duration');
+        return;
+      }
+      
+      const record = {
+        id: generateToken(),
+        city: city,
+        category: category,
+        duration: duration,
+        needs: needs.length > 0 ? needs : null,
+        timestamp: new Date().toISOString()
+      };
+      
+      records.push(record);
+      saveRecords();
+      renderAggregates();
+      
+      // Show success with token
+      const successMsg = document.getElementById('successMessage');
+      successMsg.style.display = 'block';
+      successMsg.innerHTML = `
+        <strong>Your anonymous token:</strong> <code>${record.id}</code><br>
+        <strong>Keep this token safe.</strong><br>
+        <a href="?token=${record.id}">Use this token</a> to delete your record later.
+      `;
+      
+      submissionForm.reset();
+    });
+    
+    // Save records to localStorage
+    function saveRecords() {
+      localStorage.setItem('registryRecords', JSON.stringify(records));
+    }
+    
+    // Render aggregate counts
+    function renderAggregates() {
+      if (records.length === 0) {
+        aggregateView.style.display = 'none';
+        submissionForm.style.display = 'block';
+        return;
+      }
+      
+      aggregateView.style.display = 'block';
+      submissionForm.style.display = 'none';
+      
+      const totalRecords = records.length;
+      const uniqueCitiesCount = new Set(records.map(r => r.city.toLowerCase().trim())).size;
+      
+      totalCount.textContent = totalRecords;
+      uniqueCities.textContent = uniqueCitiesCount;
+      activeSituations.textContent = totalRecords;
+      
+      // By category counts
+      const byCategory = { rough_sleeping: 0, vehicle: 0, couch: 0, other: 0 };
+      const durationMap = { less_than_week: 0, '1_4_weeks': 0, '1_3_months': 0, '3_plus_months': 0 };
+      
+      records.forEach(record => {
+        if (byCategory[record.category] !== undefined) {
+          byCategory[record.category]++;
+        }
+        if (durationMap[record.duration] !== undefined) {
+          durationMap[record.duration]++;
+        }
+      });
+      
+      situationBreakdown.innerHTML = `
+        <div><strong>rough sleeping:</strong> ${byCategory.rough_sleeping}</div>
+        <div><strong>vehicle:</strong> ${byCategory.vehicle}</div>
+        <div><strong>couch:</strong> ${byCategory.couch}</div>
+        <div><strong>other:</strong> ${byCategory.other}</div>
+      `;
+      
+      durationBreakdown.innerHTML = `
+        <div><strong>less than week:</strong> ${durationMap.less_than_week}</div>
+        <div><strong>1-4 weeks:</strong> ${durationMap['1_4_weeks']}</div>
+        <div><strong>1-3 months:</strong> ${durationMap['1_3_months']}</div>
+        <div><strong>3+ months:</strong> ${durationMap['3_plus_months']}</div>
+      `;
+    }
+    
+    // Initialize on load
+    renderAggregates();
+  </script>
+  
   <script src="app.js"></script>
 </body>
 </html>
