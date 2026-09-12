@@ -1,5 +1,6 @@
 // generate-index.js
 // Reads data/records.json and generates public index.html with aggregate counts only
+// Run via: node generate-index.js
 
 const fs = require('fs');
 const path = require('path');
@@ -71,7 +72,7 @@ const html = `<!DOCTYPE html>
         </div>
         <div class="count-card">
           <h3>Active Situations</h3>
-          <div class="number">${records.reduce((sum, r) => sum + 1, 0)}</div>
+          <div class="number">${records.length}</div>
         </div>
       </div>
 
