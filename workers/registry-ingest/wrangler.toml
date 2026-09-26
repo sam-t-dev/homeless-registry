@@ -1,0 +1,10 @@
+name = "registry-ingest"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+# Set your Cloudflare account_id before deploy:
+# account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+
+# Secrets (do NOT put values here — use wrangler secret put):
+#   npx wrangler secret put REGISTRY_GH_TOKEN
+#   npx wrangler secret put REGISTRY_INGEST_KEY
