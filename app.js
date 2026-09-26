@@ -1,6 +1,5 @@
 // Anonymous Homeless Registry - Application Logic
 
-// DOM Elements
 const submissionForm = document.getElementById('submissionForm');
 const aggregateView = document.getElementById('aggregateView');
 const submissionFormSection = document.querySelector('.submission-form');
@@ -9,123 +8,103 @@ const totalCount = document.getElementById('totalCount');
 const byCity = document.getElementById('byCity');
 const bySituation = document.getElementById('bySituation');
 const cityBreakdown = document.getElementById('cityBreakdown');
+const situationBreakdown = document.getElementById('situationBreakdown');
+const durationBreakdown = document.getElementById('durationBreakdown');
 const countryFilter = document.getElementById('countryFilter');
 const cityFilter = document.getElementById('cityFilter');
+const worldList = document.getElementById('worldList');
 
-// In-memory data store (in production, this would be a backend API)
 let records = [];
 
-// Load existing records from localStorage if available
 function loadRecords() {
-  const stored = localStorage.getItem('registryRecords');
-  if (stored) {
-    records = JSON.parse(stored);
-    renderAggregates();
+  try {
+    const stored = localStorage.getItem('registryRecords');
+    if (stored) records = JSON.parse(stored);
+  } catch (e) {
+    records = [];
   }
+  renderAggregates();
+  handleTokenDelete();
 }
 
-// Save records to localStorage
 function saveRecords() {
   localStorage.setItem('registryRecords', JSON.stringify(records));
 }
 
-// Generate one-time anonymous token (UUID v4 simplified)
 function generateToken() {
-  return 'token-' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+  if (window.crypto && crypto.randomUUID) return 'token-' + crypto.randomUUID();
+  return 'token-' + Math.random().toString(36).slice(2, 11) + Date.now().toString(36);
 }
 
-// Submit form handler
-submissionForm.addEventListener('submit', function(e) {
-  e.preventDefault();
+function labelize(key) {
+  return String(key).replace(/_/g, ' ');
+}
 
-  // Get form values
-  const city = document.getElementById('city').value.trim();
-  const category = document.getElementById('category').value;
-  const duration = document.getElementById('duration').value;
-  const needs = [];
-
-  const checkboxes = document.querySelectorAll('input[name="need"]:checked');
-  checkboxes.forEach(cb => needs.push(cb.value));
-
-  // Basic validation
-  if (!city) {
-    alert('Please enter a city');
-    return;
+function handleTokenDelete() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
+  if (!token) return;
+  const before = records.length;
+  records = records.filter(r => r.id !== token);
+  if (records.length !== before) {
+    saveRecords();
+    if (successMessage) {
+      successMessage.style.display = 'block';
+      successMessage.textContent = 'Record deleted for token ' + token;
+    }
+    history.replaceState({}, '', window.location.pathname);
   }
-
-  if (!category) {
-    alert('Please select a sleeping situation');
-    return;
-  }
-
-  if (!duration) {
-    alert('Please select a duration');
-    return;
-  }
-
-  // Create record object (no PII)
-  const record = {
-    id: generateToken(),
-    city: city,
-    category: category,
-    duration: duration,
-    needs: needs.length > 0 ? needs : null,
-    timestamp: new Date().toISOString()
-  };
-
-  // Add to records
-  records.push(record);
-  saveRecords();
-
-  // Show token to user
-  successMessage.style.display = 'block';
-  successMessage.innerHTML = `
-    <strong>Your anonymous token:</strong> <code>${record.id}</code><br>
-    <strong>Keep this token safe.</strong><br>
-    You can use it to <a href="?token=${record.id}">delete your record</a> later.
-  `;
-
-  // Reset form
-  submissionForm.reset();
-
-  // Re-render aggregates
   renderAggregates();
-});
+}
 
-// Render aggregate counts
+if (submissionForm) {
+  submissionForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const city = document.getElementById('city').value.trim();
+    const category = document.getElementById('category').value;
+    const duration = document.getElementById('duration').value;
+    const needs = [];
+    document.querySelectorAll('input[name="need"]:checked').forEach(cb => needs.push(cb.value));
+
+    if (!city) { alert('Please enter a city'); return; }
+    if (!category) { alert('Please select a sleeping situation'); return; }
+    if (!duration) { alert('Please select a duration'); return; }
+
+    const record = {
+      id: generateToken(),
+      city: city,
+      category: category,
+      duration: duration,
+      needs: needs.length > 0 ? needs : null,
+      timestamp: new Date().toISOString()
+    };
+
+    records.push(record);
+    saveRecords();
+
+    if (successMessage) {
+      successMessage.style.display = 'block';
+      successMessage.innerHTML =
+        '<strong>Your anonymous token:</strong> <code>' + record.id + '</code><br>' +
+        '<strong>Keep this token safe.</strong><br>' +
+        'You can use it to <a href="?token=' + encodeURIComponent(record.id) + '">delete your record</a> later.';
+    }
+
+    submissionForm.reset();
+    renderAggregates();
+  });
+}
+
 function renderAggregates() {
-  if (records.length === 0) {
-    // Hide view, show form
-    aggregateView.style.display = 'none';
-    submissionFormSection.style.display = 'block';
-    return;
-  }
+  if (!aggregateView || !totalCount) return;
 
-  // Show aggregate view, hide form
-  aggregateView.style.display = 'block';
-  submissionFormSection.style.display = 'none';
-
-  // Calculate counts
-  const total = records.length;
   const byCityMap = {};
-  const byCategoryMap = {
-    rough_sleeping: 0,
-    vehicle: 0,
-    couch: 0,
-    other: 0
-  };
-  const durationMap = {
-    less_than_week: 0,
-    '1_4_weeks': 0,
-    '1_3_months': 0,
-    '3_plus_months': 0
-  };
-
-  // City breakdown
+  const byCategoryMap = { rough_sleeping: 0, vehicle: 0, couch: 0, other: 0 };
+  const durationMap = { less_than_week: 0, '1_4_weeks': 0, '1_3_months': 0, '3_plus_months': 0 };
   const cityData = {};
 
   records.forEach(record => {
-    // By city
     const cityKey = record.city.toLowerCase().trim();
     if (!byCityMap[cityKey]) {
       byCityMap[cityKey] = 0;
@@ -133,62 +112,67 @@ function renderAggregates() {
     }
     byCityMap[cityKey]++;
     cityData[cityKey].count++;
-
-    // By category
     byCategoryMap[record.category] = (byCategoryMap[record.category] || 0) + 1;
-
-    // By duration
     durationMap[record.duration] = (durationMap[record.duration] || 0) + 1;
-
-    // City data for detailed breakdown
     if (!cityData[cityKey].categories[record.category]) {
       cityData[cityKey].categories[record.category] = 0;
     }
     cityData[cityKey].categories[record.category]++;
   });
 
-  // Update DOM
-  totalCount.textContent = total;
+  // Keep form visible; show aggregates alongside (was: hide form when any records)
+  if (submissionFormSection) submissionFormSection.style.display = 'block';
+  aggregateView.style.display = 'block';
+
+  totalCount.textContent = records.length;
   byCity.textContent = Object.keys(byCityMap).length;
   bySituation.textContent = Object.values(byCategoryMap).reduce((a, b) => a + b, 0);
 
-  // City breakdown HTML
-  let breakdownHTML = '';
-  const sortedCities = Object.entries(cityData).sort((a, b) => b[1].count - a[1].count);
-  
-  sortedCities.slice(0, 10).forEach(([city, data]) => {
-    const totalInCity = data.count;
-    breakdownHTML += `
-      <li>
-        <strong>${city}</strong>: ${totalInCity} people
-        ${Object.entries(data.categories).length > 0 ? 
-          ` (${Object.entries(data.categories).map(([cat, count]) => `${cat}: ${count}`).join(', ')})` : ''}
-      </li>
-    `;
-  });
-
-  if (sortedCities.length > 10) {
-    breakdownHTML += `<li><em>... and ${sortedCities.length - 10} more cities</em></li>`;
+  if (cityBreakdown) {
+    const sortedCities = Object.entries(cityData).sort((a, b) => b[1].count - a[1].count);
+    let breakdownHTML = '';
+    sortedCities.slice(0, 10).forEach(([city, data]) => {
+      const cats = Object.entries(data.categories)
+        .map(([cat, count]) => labelize(cat) + ': ' + count)
+        .join(', ');
+      breakdownHTML += '<li><strong>' + city + '</strong>: ' + data.count +
+        (cats ? ' (' + cats + ')' : '') + '</li>';
+    });
+    if (sortedCities.length > 10) {
+      breakdownHTML += '<li><em>... and ' + (sortedCities.length - 10) + ' more cities</em></li>';
+    }
+    cityBreakdown.innerHTML = breakdownHTML || '<li>No anonymous submissions yet</li>';
   }
 
-  cityBreakdown.innerHTML = breakdownHTML || '<p>No data yet</p>';
+  if (situationBreakdown) {
+    situationBreakdown.innerHTML = Object.entries(byCategoryMap)
+      .map(([cat, count]) => '<div><strong>' + labelize(cat) + ':</strong> ' + count + '</div>')
+      .join('');
+  }
+  if (durationBreakdown) {
+    durationBreakdown.innerHTML = Object.entries(durationMap)
+      .map(([dur, count]) => '<div><strong>' + labelize(dur) + ':</strong> ' + count + '</div>')
+      .join('');
+  }
 
-  // Populate filters
-  const countries = [...new Set(records.map(r => r.city.split(' ').pop() || 'Unknown'))];
-  countryFilter.innerHTML = '<option value="">All Countries</option>';
-  countries.forEach(country => {
-    const opt = document.createElement('option');
-    opt.value = country;
-    opt.textContent = country;
-    countryFilter.appendChild(opt);
-  });
-
-  // Populate city filter initially
-  updateCityFilter(Object.keys(byCityMap));
+  if (countryFilter) {
+    const countries = [...new Set(records.map(r => (r.city.split(',').pop() || r.city).trim()))];
+    const prev = countryFilter.value;
+    countryFilter.innerHTML = '<option value="">All</option>';
+    countries.forEach(country => {
+      const opt = document.createElement('option');
+      opt.value = country;
+      opt.textContent = country;
+      countryFilter.appendChild(opt);
+    });
+    countryFilter.value = prev;
+  }
+  if (cityFilter) updateCityFilter(Object.keys(byCityMap));
 }
 
-// Update city filter options
 function updateCityFilter(cities) {
+  if (!cityFilter) return;
+  const prev = cityFilter.value;
   cityFilter.innerHTML = '<option value="">All Cities</option>';
   cities.forEach(city => {
     const opt = document.createElement('option');
@@ -196,7 +180,24 @@ function updateCityFilter(cities) {
     opt.textContent = city;
     cityFilter.appendChild(opt);
   });
+  cityFilter.value = prev;
 }
 
-// Initialize on load
+async function loadWorldStats() {
+  if (!worldList) return;
+  try {
+    const res = await fetch('data/homelessness-worldwide.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    worldList.innerHTML = (data.countries || []).map(c => {
+      const change = c.change >= 0 ? '+' + c.change : String(c.change);
+      return '<li><strong>' + c.name + '</strong>: ' +
+        Number(c.count).toLocaleString() + ' <span class="muted">(' + change + ')</span></li>';
+    }).join('') || '<li>No world data</li>';
+  } catch (e) {
+    worldList.innerHTML = '<li class="muted">World snapshot unavailable</li>';
+  }
+}
+
 loadRecords();
+loadWorldStats();
