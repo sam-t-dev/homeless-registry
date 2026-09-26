@@ -5,7 +5,8 @@
     "gaps": [
       "Most OECD HC3.1 countries publish a single latest-year headline here; multi-year series are included only where an official national time series was verified.",
       "US HUD PIT 2021 national total omitted: pandemic disruptions meant a full comparable national (sheltered+unsheltered) total was not published the same way.",
-      "United Kingdom omitted from official country counts on the map (no clear unduplicated national person total in OECD HC3.1)."
+      "United Kingdom omitted from official country counts on the map (no clear unduplicated national person total in OECD HC3.1).",
+      "No official monthly national person totals published for Australia (ABS Census) or United States (HUD PIT) — chart months grain falls back to annual points."
     ],
     "sources": [
       {
@@ -38,7 +39,8 @@
         "name": "OECD Affordable Housing Database HC3.1 (latest national headlines used on map)",
         "url": "https://webfs.oecd.org/Els-com/Affordable_Housing_Database/HC3-1-Population-experiencing-homelessness.xlsx"
       }
-    ]
+    ],
+    "grainNote": "Primary visual is a line chart. Published cadence is annual (US PIT) or multi-year Census (AU); monthly national series are not available."
   },
   "series": [
     {
@@ -78,6 +80,7 @@
         {"year": 2019, "count": 567715, "sourceId": "hud-ahar-2019"},
         {"year": 2020, "count": 580466, "sourceId": "hud-coc-perf-2024"},
         {"year": 2022, "count": 582462, "sourceId": "hud-coc-perf-2024"},
+        {"year": 2023, "count": 653104, "sourceId": "hud-ahar-2024"},
         {"year": 2023, "count": 653104, "sourceId": "hud-coc-perf-2024"},
         {"year": 2024, "count": 771480, "sourceId": "hud-ahar-2024"}
       ]
