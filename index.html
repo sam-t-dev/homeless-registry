@@ -21,12 +21,13 @@
     </section>
 
     <aside class="sidebar">
+      <form id="registryForm">
       <section class="place-picker">
         <h1>Find a place</h1>
         <label for="countrySelect">Country</label>
-        <select id="countrySelect"><option value="">Choose a country…</option></select>
+        <select id="countrySelect" name="country" required><option value="">Choose a country…</option></select>
         <label for="cityInput">City or area</label>
-        <input id="cityInput" list="cityOptions" autocomplete="off" placeholder="Choose a country first">
+        <input id="cityInput" name="city" list="cityOptions" autocomplete="off" placeholder="Choose a country first" required>
         <datalist id="cityOptions"></datalist>
         <p id="placeHint" class="muted">Country → city → register a situation.</p>
       </section>
@@ -48,7 +49,6 @@
 
       <section id="formSection" class="form-section" hidden>
         <h2 id="formTitle">Register a situation</h2>
-        <form id="registryForm">
           <input type="hidden" id="recordId">
           <label for="category">Sleeping situation</label>
           <select id="category" required>
@@ -76,9 +76,9 @@
             <button type="submit" id="saveButton">Save anonymously</button>
             <button type="button" id="cancelButton" class="secondary" hidden>Cancel update</button>
           </div>
-        </form>
         <p id="message" class="message" role="status"></p>
       </section>
+      </form>
     </aside>
   </main>
 
