@@ -1,1 +1,206 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Anonymous homeless registry — explore the map, then submit situation data without personal details.">
+  <title>Anonymous Homeless Registry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="eyebrow">Privacy-first · Aggregate only</p>
+      <h1>Anonymous Homeless Registry</h1>
+      <p class="lede">Start on the map. Zoom into a country, then a city — see local counts, then add your situation anonymously. No names, addresses, or contact details.</p>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="map-shell card" aria-labelledby="map-heading">
+      <div class="map-toolbar">
+        <div class="map-toolbar-left">
+          <h2 id="map-heading" class="visually-hidden">World map</h2>
+          <nav class="breadcrumb" id="mapBreadcrumb" aria-label="Map location">
+            <button type="button" class="crumb" data-level="world">World</button>
+          </nav>
+          <p class="muted map-hint" id="mapHint">Click a country to zoom in. Then choose a city marker.</p>
+        </div>
+        <div class="map-toolbar-right">
+          <label class="sr-combo">
+            <span class="visually-hidden">Jump to country</span>
+            <input type="search" id="countryJumpFilter" placeholder="Find country…" autocomplete="off" aria-label="Filter countries to jump">
+            <select id="countryJump" aria-label="Jump to country">
+              <option value="">Jump to country…</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div id="map" role="application" aria-label="Interactive world map for selecting country and city"></div>
+    </section>
+
+    <div class="layout-split">
+      <section class="card place-panel" id="placePanel" aria-labelledby="place-heading">
+        <div class="card-head">
+          <h2 id="place-heading">Selected place</h2>
+          <p class="muted" id="placeSubtitle">Choose a country on the map, then a city, to see statistics and register.</p>
+        </div>
+        <div id="placeStats" class="place-stats" hidden>
+          <div class="counts compact">
+            <div class="count-card">
+              <h3>Records here</h3>
+              <div class="number" id="placeCount">0</div>
+            </div>
+            <div class="count-card">
+              <h3>Situations</h3>
+              <div id="placeSituationBreakdown" class="mini-breakdown"></div>
+            </div>
+          </div>
+        </div>
+        <div id="placeEmpty" class="empty-state">
+          <p>No place selected yet.</p>
+        </div>
+      </section>
+
+      <section class="card submission-form" id="submissionFormSection" aria-labelledby="submit-heading">
+        <div class="card-head">
+          <h2 id="submit-heading">Anonymous submission</h2>
+          <p class="muted">No personal information. Keep your token if you ever want to delete or update your record.</p>
+        </div>
+
+        <div class="antiduope" id="antiDupeBlock">
+          <label for="existingRecord">I have already registered in one of these places</label>
+          <select id="existingRecord">
+            <option value="">First-time registration (new record)</option>
+          </select>
+          <p class="hint muted">Picking an existing entry updates that record instead of creating a duplicate — so counts stay honest over time.</p>
+        </div>
+
+        <form id="submissionForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="country">Country <span class="req" aria-hidden="true">*</span></label>
+              <input type="search" id="countryFilterInput" class="country-search" placeholder="Filter countries…" autocomplete="off" aria-controls="country" aria-label="Filter country list">
+              <select id="country" name="country" required aria-required="true">
+                <option value="">Select a country…</option>
+              </select>
+            </div>
+            <div class="form-group city-group">
+              <label for="city">City (approximate) <span class="req" aria-hidden="true">*</span></label>
+              <div class="autocomplete-wrap">
+                <input type="text" id="city" name="city" placeholder="Start typing a city…" required maxlength="80" autocomplete="off" aria-required="true" aria-autocomplete="list" aria-controls="citySuggestions" aria-expanded="false">
+                <ul id="citySuggestions" class="suggestions" role="listbox" hidden></ul>
+              </div>
+              <p class="hint muted">Synced with the map. Free-text city allowed if not listed.</p>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="category">Sleeping situation <span class="req" aria-hidden="true">*</span></label>
+              <select id="category" name="category" required aria-required="true">
+                <option value="">Select…</option>
+                <option value="rough_sleeping">Rough sleeping</option>
+                <option value="vehicle">Vehicle</option>
+                <option value="couch">Couch surfing</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="duration">Duration <span class="req" aria-hidden="true">*</span></label>
+              <select id="duration" name="duration" required aria-required="true">
+                <option value="">Select…</option>
+                <option value="less_than_week">Less than a week</option>
+                <option value="1_4_weeks">1–4 weeks</option>
+                <option value="1_3_months">1–3 months</option>
+                <option value="3_plus_months">3+ months</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <span class="label" id="needs-label">Optional needs</span>
+            <div class="checkbox-group" role="group" aria-labelledby="needs-label">
+              <label class="check"><input type="checkbox" name="need" value="food"> Food</label>
+              <label class="check"><input type="checkbox" name="need" value="shelter"> Shelter</label>
+              <label class="check"><input type="checkbox" name="need" value="medical"> Medical</label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Submit anonymously</button>
+        </form>
+        <div class="success-message" id="successMessage" hidden role="status"></div>
+      </section>
+    </div>
+
+    <section class="card aggregate-view" id="aggregateView" aria-labelledby="agg-heading">
+      <div class="card-head">
+        <h2 id="agg-heading">Local aggregates</h2>
+        <p class="muted">From anonymous submissions stored in this browser (demo). Filter by country and city.</p>
+      </div>
+      <div class="filters">
+        <label class="filter-field">
+          <span>Country</span>
+          <select id="countryFilter"><option value="">All countries</option></select>
+        </label>
+        <label class="filter-field">
+          <span>City</span>
+          <select id="cityFilter"><option value="">All cities</option></select>
+        </label>
+      </div>
+      <div class="counts">
+        <div class="count-card">
+          <h3>Total records</h3>
+          <div class="number" id="totalCount">0</div>
+        </div>
+        <div class="count-card">
+          <h3>Unique cities</h3>
+          <div class="number" id="byCity">0</div>
+        </div>
+        <div class="count-card">
+          <h3>Active situations</h3>
+          <div class="number" id="bySituation">0</div>
+        </div>
+      </div>
+      <div class="city-breakdown">
+        <h3>By location</h3>
+        <ul id="cityBreakdown"></ul>
+      </div>
+      <div class="counts situation-duration">
+        <div class="count-card">
+          <h3>By situation</h3>
+          <div id="situationBreakdown"></div>
+        </div>
+        <div class="count-card">
+          <h3>By duration</h3>
+          <div id="durationBreakdown"></div>
+        </div>
+      </div>
+      <p class="muted note">Browser-local demo store for now. Shared server-side registry still WIP (see repo cron scripts).</p>
+    </section>
+
+    <section class="card world-stats" id="worldStats" aria-labelledby="world-heading">
+      <div class="card-head">
+        <h2 id="world-heading">Context: published country estimates</h2>
+        <p class="muted">Separate from anonymous submissions. Sample snapshot from <code>data/homelessness-worldwide.json</code>.</p>
+      </div>
+      <ul id="worldList"></ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Anonymous Homeless Registry</p>
+    <nav aria-label="Legal">
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="https://github.com/sam-t-dev/homeless-registry">Source</a>
+    </nav>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>
