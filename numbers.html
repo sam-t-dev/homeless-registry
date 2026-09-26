@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Homelessness numbers and trends — official national estimates over time, without the map.">
+  <title>Homeless Registry · Numbers &amp; trends</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles-numbers.css">
+</head>
+<body data-page="numbers">
+  <header class="topbar">
+    <div>
+      <strong>Homeless Registry</strong>
+      <span class="tag">numbers · trends</span>
+    </div>
+    <p>Aggregated official estimates over time. Definitions differ — not comparable 1:1.</p>
+    <div class="topbar-actions">
+      <a class="btn-cta secondary-cta" href="index.html">← Map</a>
+      <a class="btn-cta" href="register.html">Add to registry</a>
+    </div>
+  </header>
+
+  <main class="numbers-page">
+    <section class="numbers-hero">
+      <h1>Numbers &amp; trends</h1>
+      <p class="disclaimer" id="disclaimer">Loading…</p>
+      <div class="kpi-row" id="kpiRow" aria-live="polite"></div>
+    </section>
+
+    <section class="chart-card" aria-label="Trends chart">
+      <div class="chart-toolbar">
+        <div class="toolbar-group" role="group" aria-label="Timeline grain">
+          <span class="toolbar-label">View</span>
+          <button type="button" class="chip active" data-grain="decades">Decades</button>
+          <button type="button" class="chip" data-grain="years">Years</button>
+          <button type="button" class="chip" data-grain="months" title="Monthly national series not published for AU/US">Months</button>
+        </div>
+        <div class="toolbar-group" role="group" aria-label="Timeline range">
+          <span class="toolbar-label">Range</span>
+          <button type="button" class="chip active" data-range="all">All</button>
+          <button type="button" class="chip" data-range="20">20y</button>
+          <button type="button" class="chip" data-range="10">10y</button>
+          <button type="button" class="chip" data-range="5">5y</button>
+        </div>
+        <div class="toolbar-group" role="group" aria-label="Series">
+          <span class="toolbar-label">Series</span>
+          <label class="chip-check"><input type="checkbox" data-series="AU" checked> Australia</label>
+          <label class="chip-check"><input type="checkbox" data-series="US" checked> United States</label>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="trendsChart" height="120" aria-label="Homelessness counts over time"></canvas>
+      </div>
+      <p class="muted note" id="chartNote"></p>
+    </section>
+
+    <section class="numbers-section">
+      <h2>Series highlights</h2>
+      <div class="series-cards" id="seriesCards"></div>
+    </section>
+
+    <section class="numbers-section">
+      <h2>Latest national estimates</h2>
+      <p class="muted">From the map dataset (one latest year per country). Change vs prior only where a verified prior year exists in the time series.</p>
+      <div class="table-wrap">
+        <table class="numbers-table" id="countriesTable">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th class="num">Count</th>
+              <th class="num">Year</th>
+              <th class="num">Change vs prior</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="numbers-section">
+      <h2>Sources</h2>
+      <ul class="source-list" id="sourceList"></ul>
+      <p class="muted note" id="gapsNote"></p>
+    </section>
+  </main>
+
+  <footer>
+    Records stay in this browser only unless separately published.
+    · <a href="index.html">Map</a>
+    · <a href="register.html">Add to registry</a>
+    · <a href="privacy-policy.html">Privacy</a>
+    · <a href="terms.html">Terms</a>
+    · <a href="https://github.com/sam-t-dev/homeless-registry">Source</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  <script src="shared.js"></script>
+  <script src="data/stats-meta.js"></script>
+  <script src="data/stats-c1.js"></script>
+  <script src="data/stats-c2.js"></script>
+  <script src="data/stats.js"></script>
+  <script src="data/numapp_b1.js"></script>
+  <script src="data/numapp_b2.js"></script>
+  <script src="numbers-app.js"></script>
+</body>
+</html>
