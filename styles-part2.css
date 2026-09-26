@@ -1,5 +1,8 @@
 .existing-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-top:1px solid #edf0f2;font-size:.84rem}
 .existing-item button{white-space:nowrap}
+.my-submissions .submission-item{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:8px 0;border-top:1px solid #edf0f2;font-size:.84rem}
+.my-submissions .submission-item button{white-space:nowrap;flex-shrink:0}
+.my-submissions .submission-meta{color:#5a6b75;font-size:.78rem}
 button{border:0;border-radius:5px;padding:9px 12px;background:#147d7e;color:#fff;font:inherit;font-weight:700;cursor:pointer}
 button:hover{background:#0d6566}
 button.secondary{background:#edf1f3;color:#243744}
