@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Homeless Registry · Find a place</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -49,33 +48,33 @@
 
       <section id="formSection" class="form-section" hidden>
         <h2 id="formTitle">Register a situation</h2>
-          <input type="hidden" id="recordId">
-          <label for="category">Sleeping situation</label>
-          <select id="category" required>
-            <option value="">Select…</option>
-            <option value="rough_sleeping">Rough sleeping</option>
-            <option value="vehicle">Vehicle</option>
-            <option value="couch">Couch surfing</option>
-            <option value="other">Other</option>
-          </select>
-          <label for="duration">Duration</label>
-          <select id="duration" required>
-            <option value="">Select…</option>
-            <option value="less_than_week">Less than a week</option>
-            <option value="1_4_weeks">1–4 weeks</option>
-            <option value="1_3_months">1–3 months</option>
-            <option value="3_plus_months">3+ months</option>
-          </select>
-          <fieldset>
-            <legend>Optional needs</legend>
-            <label><input type="checkbox" name="need" value="food"> Food</label>
-            <label><input type="checkbox" name="need" value="shelter"> Shelter</label>
-            <label><input type="checkbox" name="need" value="medical"> Medical</label>
-          </fieldset>
-          <div class="form-actions">
-            <button type="submit" id="saveButton">Save anonymously</button>
-            <button type="button" id="cancelButton" class="secondary" hidden>Cancel update</button>
-          </div>
+        <input type="hidden" id="recordId">
+        <label for="category">Sleeping situation</label>
+        <select id="category" required>
+          <option value="">Select…</option>
+          <option value="rough_sleeping">Rough sleeping</option>
+          <option value="vehicle">Vehicle</option>
+          <option value="couch">Couch surfing</option>
+          <option value="other">Other</option>
+        </select>
+        <label for="duration">Duration</label>
+        <select id="duration" required>
+          <option value="">Select…</option>
+          <option value="less_than_week">Less than a week</option>
+          <option value="1_4_weeks">1–4 weeks</option>
+          <option value="1_3_months">1–3 months</option>
+          <option value="3_plus_months">3+ months</option>
+        </select>
+        <fieldset>
+          <legend>Optional needs</legend>
+          <label><input type="checkbox" name="need" value="food"> Food</label>
+          <label><input type="checkbox" name="need" value="shelter"> Shelter</label>
+          <label><input type="checkbox" name="need" value="medical"> Medical</label>
+        </fieldset>
+        <div class="form-actions">
+          <button type="submit" id="saveButton">Save anonymously</button>
+          <button type="button" id="cancelButton" class="secondary" hidden>Cancel update</button>
+        </div>
         <p id="message" class="message" role="status"></p>
       </section>
       </form>
@@ -83,9 +82,7 @@
   </main>
 
   <footer>Records stay in this browser only. No names, addresses, contact details, or API key required. · <a href="privacy-policy.html">Privacy</a></footer>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
-  <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
