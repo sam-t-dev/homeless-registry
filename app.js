@@ -73,8 +73,8 @@ function showCity(){
   showPlace();
 }
 function scopeRecords(){
-  const code=countrySelect.value, city=cityInput.value.trim().toLowerCase();
-  return records.filter(r => r.countryCode === code && (!city || String(r.city).toLowerCase() === city));
+  const code=countrySelect.value, city=cityInput.value.trim().toLowerCase(), country=selectedCountry();
+  return records.filter(r => (r.countryCode === code || r.country === (country && country[1])) && (!city || String(r.city).toLowerCase() === city));
 }
 function renderScope(){
   const code=countrySelect.value, city=cityInput.value.trim(),scoped=scopeRecords();
