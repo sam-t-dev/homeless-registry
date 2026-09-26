@@ -15,7 +15,10 @@
       <span class="tag">anonymous · local only</span>
     </div>
     <p>Choose a country, then a city. Add or update one situation for that place. No names, addresses, or contact details.</p>
-    <a class="btn-cta secondary-cta" href="index.html">View stats map</a>
+    <div class="topbar-actions">
+      <a class="btn-cta secondary-cta" href="numbers.html">Numbers</a>
+      <a class="btn-cta secondary-cta" href="index.html">View stats map</a>
+    </div>
   </header>
 
   <main class="layout">
@@ -36,6 +39,19 @@
           <input id="cityInput" name="city" list="cityOptions" autocomplete="off" placeholder="Choose a country first" required>
           <datalist id="cityOptions"></datalist>
           <p id="placeHint" class="muted">Country → city → register a situation. Stored only in this browser.</p>
+        </section>
+
+        <section id="officialFormPanel" class="official-form-card" hidden>
+          <details id="officialFormDetails" open>
+            <summary>How this place is counted officially</summary>
+            <div class="official-form-body">
+              <p id="officialFormTitle" class="official-form-title"></p>
+              <p id="officialFormDesc" class="muted"></p>
+              <ul id="officialFormCues" class="official-form-cues"></ul>
+              <p id="officialFormLinks" class="official-form-links"></p>
+              <p id="officialFormGap" class="muted note" hidden></p>
+            </div>
+          </details>
         </section>
 
         <section id="stats" class="stats" hidden>
@@ -90,6 +106,7 @@
 
   <footer>
     Anonymous · browser-local only. No names, addresses, contact details, or API key required.
+    · <a href="numbers.html">Numbers</a>
     · <a href="privacy-policy.html">Privacy</a>
     · <a href="terms.html">Terms</a>
     · <a href="index.html">View stats map</a>
