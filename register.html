@@ -12,7 +12,7 @@
   <header class="topbar">
     <div>
       <strong>Homeless Registry</strong>
-      <span class="tag">anonymous · Formspree + local cache</span>
+      <span class="tag">anonymous · public GitHub registry + local cache</span>
     </div>
     <p>Choose a country, then a city. Add or update one situation for that place. No names, addresses, or contact details.</p>
     <div class="topbar-actions">
@@ -45,7 +45,7 @@
           <label for="cityInput">City or area</label>
           <input id="cityInput" name="city" list="cityOptions" autocomplete="off" placeholder="Choose a country first" required>
           <datalist id="cityOptions"></datalist>
-          <p id="placeHint" class="muted">Country → city → register a situation. Submissions are saved to the registry server (Formspree); a copy also stays in this browser as an offline cache.</p>
+          <p id="placeHint" class="muted">Country → city → register a situation. Submissions are saved to the public GitHub registry; a copy also stays in this browser as an offline cache.</p>
         </section>
 
         <section id="mySubmissions" class="my-submissions" hidden>
@@ -123,7 +123,7 @@
   </main>
 
   <footer>
-    Anonymous · no names, addresses, or contact details. Saves go to the registry server (Formspree); local browser cache kept as backup.
+    Anonymous · no names, addresses, or contact details. Saves go to the public GitHub registry; local browser cache kept as backup.
     · <a href="numbers.html">Numbers</a>
     · <a href="privacy-policy.html">Privacy</a>
     · <a href="terms.html">Terms</a>
@@ -132,6 +132,9 @@
 
   <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
   <script src="formspree-config.js"></script>
+  <script src="registry-ingest-config.js"></script>
+  <script src="registry-api-config.js"></script>
+  <script src="github-registry-save.js"></script>
   <script src="shared.js"></script>
   <script src="shared-custom-countries.js"></script>
   <script src="data/ra0.js"></script>
