@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "id": "test-agent-smoke",
+    "country": "Australia",
+    "countryCode": "AU",
+    "city": "Test City",
+    "category": "other",
+    "duration": "less_than_week",
+    "needs": [],
+    "timestamp": "2026-09-26T23:34:13Z"
+  }
+]
