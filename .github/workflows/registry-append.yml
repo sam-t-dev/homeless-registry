@@ -1,0 +1,141 @@
+name: registry-append
+
+on:
+  repository_dispatch:
+    types: [registry-submit]
+  workflow_dispatch:
+    inputs:
+      record_json:
+        description: JSON object for one registry record (id, country, countryCode, city, category, duration, needs, timestamp)
+        required: true
+        type: string
+      ingest_key:
+        description: Optional ingest key (checked against REGISTRY_INGEST_KEY secret if set)
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  append:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve record payload
+        id: payload
+        uses: actions/github-script@v7
+        env:
+          EXPECTED_INGEST: ${{ secrets.REGISTRY_INGEST_KEY }}
+          WD_RECORD: ${{ github.event.inputs.record_json }}
+          WD_INGEST: ${{ github.event.inputs.ingest_key }}
+        with:
+          script: |
+            const expected = process.env.EXPECTED_INGEST || '';
+            let record;
+            let ingestKey = '';
+            if (context.eventName === 'repository_dispatch') {
+              const cp = context.payload.client_payload || {};
+              record = cp.record;
+              ingestKey = cp.ingestKey || '';
+            } else {
+              record = JSON.parse(process.env.WD_RECORD || 'null');
+              ingestKey = process.env.WD_INGEST || '';
+            }
+            if (!record || typeof record !== 'object' || Array.isArray(record)) {
+              core.setFailed('Missing or invalid record object');
+              return;
+            }
+            if (!record.id) {
+              core.setFailed('record.id is required');
+              return;
+            }
+            if (expected) {
+              if (!ingestKey || ingestKey !== expected) {
+                core.setFailed('ingestKey mismatch or missing (REGISTRY_INGEST_KEY is set)');
+                return;
+              }
+            }
+            // Normalize optional fields
+            const out = {
+              id: String(record.id),
+              country: record.country ?? '',
+              countryCode: record.countryCode ?? '',
+              city: record.city ?? '',
+              category: record.category ?? 'other',
+              duration: record.duration ?? '',
+              needs: Array.isArray(record.needs) ? record.needs : [],
+              timestamp: record.timestamp || new Date().toISOString(),
+            };
+            core.setOutput('record_json', JSON.stringify(out));
+            core.setOutput('record_id', out.id);
+
+      - name: Upsert on main and gh-pages via Contents API
+        env:
+          GH_TOKEN: ${{ secrets.REGISTRY_GH_TOKEN }}
+          RECORD_JSON: ${{ steps.payload.outputs.record_json }}
+          RECORD_ID: ${{ steps.payload.outputs.record_id }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "REGISTRY_GH_TOKEN secret is not set"
+            exit 1
+          fi
+          node <<'NODE'
+          const OWNER = 'sam-t-dev';
+          const REPO = 'homeless-registry';
+          const PATH = 'data/records.json';
+          const BRANCHES = ['main', 'gh-pages'];
+          const token = process.env.GH_TOKEN;
+          const record = JSON.parse(process.env.RECORD_JSON);
+          const API = 'https://api.github.com';
+
+          async function api(method, path, body) {
+            const res = await fetch(`${API}${path}`, {
+              method,
+              headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28',
+                'User-Agent': 'registry-append-workflow',
+                ...(body ? { 'Content-Type': 'application/json' } : {}),
+              },
+              body: body ? JSON.stringify(body) : undefined,
+            });
+            const text = await res.text();
+            let data;
+            try { data = text ? JSON.parse(text) : null; } catch { data = { raw: text }; }
+            if (!res.ok) throw new Error(`${method} ${path} -> ${res.status}: ${data?.message || text}`);
+            return data;
+          }
+
+          async function sync(branch) {
+            let file = null;
+            try {
+              file = await api('GET', `/repos/${OWNER}/${REPO}/contents/${PATH}?ref=${branch}`);
+            } catch (e) {
+              if (!String(e.message).includes('404')) throw e;
+            }
+            let records = [];
+            if (file?.content) {
+              const raw = Buffer.from(file.content.replace(/\n/g, ''), 'base64').toString('utf8');
+              records = JSON.parse(raw || '[]');
+              if (!Array.isArray(records)) throw new Error('records.json not an array');
+            }
+            const i = records.findIndex((r) => r && r.id === record.id);
+            if (i >= 0) records[i] = { ...records[i], ...record };
+            else records.push(record);
+            const content = Buffer.from(JSON.stringify(records, null, 2) + '\n', 'utf8').toString('base64');
+            const body = {
+              message: `registry: upsert ${record.id} [skip ci]`,
+              content,
+              branch,
+            };
+            if (file?.sha) body.sha = file.sha;
+            const result = await api('PUT', `/repos/${OWNER}/${REPO}/contents/${PATH}`, body);
+            console.log(JSON.stringify({ branch, count: records.length, commit: result.commit?.sha?.slice(0, 7) }));
+          }
+
+          (async () => {
+            for (const b of BRANCHES) await sync(b);
+          })().catch((e) => { console.error(e.message); process.exit(1); });
+          NODE
