@@ -60,8 +60,8 @@ function showCountry(){
   const cities = citiesFor(c[0]);
   cities.forEach(city => {
     const marker = L.marker([city.lat,city.lon]).addTo(map).bindPopup(`<strong>${esc(city.name)}</strong><br><button type="button" data-city="${esc(city.name)}">Use this city</button>`);
-    marker.on('click', () => { cityInput.value=city.name; showPlace(); });
-    marker.on('popupopen', e => { const b=e.popup.getElement().querySelector('button'); if(b) b.onclick=()=>{cityInput.value=city.name; showPlace(); e.popup._close();}; });
+    marker.on('click', () => { cityInput.value=city.name; showCity(); });
+    marker.on('popupopen', e => { const b=e.popup.getElement().querySelector('button'); if(b) b.onclick=()=>{cityInput.value=city.name; showCity(); e.popup._close();}; });
     markers.push(marker);
   });
   if(Number.isFinite(c[7])) map.flyToBounds([[c[4],c[5]],[c[6],c[7]]],{padding:[25,25],duration:.7}); else if(cities[0]) map.flyTo([cities[0].lat,cities[0].lon],4); else map.flyTo([c[2],c[3]],3);
