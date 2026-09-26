@@ -96,3 +96,14 @@ footer a{color:#147d7e}
 .kpi-link{color:#147d7e;text-decoration:underline;text-underline-offset:3px}
 .kpi-link:hover{color:#0d6566}
 .stat-grid .kpi-link{color:inherit;text-decoration:underline;text-underline-offset:3px}
+
+/* Have I already been counted? (register) */
+.already-counted-card{border-color:#9fd3c7}
+.already-counted-hero{padding:12px 14px 4px;background:linear-gradient(180deg,#e4f4f2 0%,#eef5f5 100%);border-radius:8px 8px 0 0}
+.already-counted-q{margin:0 0 6px;font-size:1.05rem;font-weight:800;color:#102a43;line-height:1.25}
+.already-counted-blurb{margin:0 0 8px;font-size:.88rem;color:#3a4d59;line-height:1.4}
+.already-counted-link{margin:0 0 8px;font-size:.9rem}
+.already-counted-link a{display:inline-block;background:#147d7e;color:#fff!important;font-weight:700;text-decoration:none;padding:8px 12px;border-radius:5px}
+.already-counted-link a:hover{background:#0d6566}
+.already-counted-link .place-label{display:block;margin-top:6px;font-size:.78rem;color:#61727e}
+.already-counted-card details{border-top:1px solid #cfe0e0}
