@@ -5,6 +5,7 @@
 .stat-grid .kpi-link{color:inherit;text-decoration:underline;text-underline-offset:3px}
 .numbers-page{max-width:1100px;margin:0 auto;padding:22px 18px 40px}
 .numbers-hero h1{margin:0 0 10px;font-size:1.7rem}
+.numbers-kpis{margin:8px 0 0}
 .kpi-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0 8px}
 .kpi-card{background:#fff;border:1px solid #dbe3e8;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;text-decoration:none;color:inherit;box-shadow:0 1px 2px #0001}
 .kpi-card strong{font-size:1.55rem;color:#147d7e;line-height:1.15}
@@ -20,7 +21,8 @@
 .chip.active{background:#147d7e;color:#fff}
 .chip-check{display:inline-flex;align-items:center;gap:6px;background:#edf1f3;border-radius:999px;padding:6px 12px;font-size:.84rem;font-weight:650;cursor:pointer}
 .chip-check input{width:auto;margin:0}
-.chart-wrap{position:relative;min-height:280px}
+.chart-wrap{position:relative;width:100%;height:min(55vh,560px);min-height:320px}
+.chart-wrap canvas{display:block;width:100%!important;height:100%!important}
 .numbers-section{margin:28px 0}
 .numbers-section h2{margin:0 0 12px;font-size:1.15rem}
 .series-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -43,7 +45,26 @@
   .kpi-row{grid-template-columns:1fr 1fr}
   .series-cards{grid-template-columns:1fr}
 }
+@media(max-width:800px){
+  /* Map-like large chart; page keeps normal document scroll */
+  .numbers-page{padding-left:0;padding-right:0}
+  .numbers-hero,.numbers-kpis,.numbers-section{padding-left:18px;padding-right:18px}
+  .chart-card{
+    width:100%;
+    max-width:100%;
+    margin:12px 0;
+    border-radius:0;
+    border-left:0;
+    border-right:0;
+    padding:12px 0 8px;
+    box-shadow:none;
+  }
+  .chart-toolbar{padding:0 14px;margin-bottom:8px}
+  .chart-card > .note{padding:0 14px 6px}
+  .chart-wrap{height:45vh;min-height:280px;width:100%}
+}
 @media(max-width:560px){
   .kpi-row{grid-template-columns:1fr}
   .series-kpis{grid-template-columns:1fr}
+  .chart-wrap{height:min(78vh,620px);min-height:320px}
 }
