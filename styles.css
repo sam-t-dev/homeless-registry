@@ -90,3 +90,9 @@ footer a{color:#147d7e}
 .official-form-links{margin:8px 0 0;font-size:.84rem}
 .official-form-links a{color:#147d7e;font-weight:650}
 .official-form-links .sep{color:#8a9ba6;margin:0 6px}
+
+/* Shared nav / clickable KPI on map */
+.topbar-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.kpi-link{color:#147d7e;text-decoration:underline;text-underline-offset:3px}
+.kpi-link:hover{color:#0d6566}
+.stat-grid .kpi-link{color:inherit;text-decoration:underline;text-underline-offset:3px}
