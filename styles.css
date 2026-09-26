@@ -75,3 +75,18 @@ footer a{color:#147d7e}
   .split-breakdown{grid-template-columns:1fr}
   .stat-grid{grid-template-columns:1fr 1fr}
 }
+
+/* Official count form memory panel (register) */
+.official-form-card{background:#eef5f5;border:1px solid #cfe0e0;border-radius:8px;padding:0;margin:0 0 4px}
+.official-form-card details{padding:10px 12px}
+.official-form-card summary{cursor:pointer;font-weight:700;font-size:.9rem;color:#102a43;list-style:none;display:flex;align-items:center;gap:8px}
+.official-form-card summary::-webkit-details-marker{display:none}
+.official-form-card summary::before{content:"▸";color:#147d7e;font-size:.85rem}
+.official-form-card details[open] summary::before{content:"▾"}
+.official-form-body{margin-top:8px}
+.official-form-title{margin:0 0 6px;font-weight:700;font-size:.92rem;color:#12212b}
+.official-form-cues{margin:8px 0;padding-left:18px;font-size:.84rem;line-height:1.45;color:#3a4d59}
+.official-form-cues li{margin:3px 0}
+.official-form-links{margin:8px 0 0;font-size:.84rem}
+.official-form-links a{color:#147d7e;font-weight:650}
+.official-form-links .sep{color:#8a9ba6;margin:0 6px}
