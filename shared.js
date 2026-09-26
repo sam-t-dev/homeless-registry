@@ -85,7 +85,7 @@
   const STORAGE_KEY = 'registryRecords';
 
   function esc(value) {
-    return String(value ?? '').replace(/[&<>'\"']/g, (c) => ({
+    return String(value ?? '').replace(/[&<>'\"]/g, (c) => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
     }[c]));
   }
