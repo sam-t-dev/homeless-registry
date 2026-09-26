@@ -38,10 +38,15 @@
           <label for="cityInput">City or area</label>
           <input id="cityInput" name="city" list="cityOptions" autocomplete="off" placeholder="Choose a country first" required>
           <datalist id="cityOptions"></datalist>
-          <p id="placeHint" class="muted">Country → city → register a situation. Stored only in this browser.</p>
+          <p id="placeHint" class="muted">Country → city → register a situation. Submissions are saved to the registry server (Formspree); a copy also stays in this browser as an offline cache.</p>
         </section>
 
-        <section id="officialFormPanel" class="official-form-card" hidden>
+        <section id="officialFormPanel" class="official-form-card already-counted-card" hidden>
+          <div class="already-counted-hero">
+            <p id="alreadyCountedQ" class="already-counted-q">Have I already been counted?</p>
+            <p id="alreadyCountedBlurb" class="already-counted-blurb"></p>
+            <p id="alreadyCountedLink" class="already-counted-link"></p>
+          </div>
           <details id="officialFormDetails" open>
             <summary>How this place is counted officially</summary>
             <div class="official-form-body">
@@ -105,7 +110,7 @@
   </main>
 
   <footer>
-    Anonymous · browser-local only. No names, addresses, contact details, or API key required.
+    Anonymous · no names, addresses, or contact details. Saves go to the registry server (Formspree); local browser cache kept as backup.
     · <a href="numbers.html">Numbers</a>
     · <a href="privacy-policy.html">Privacy</a>
     · <a href="terms.html">Terms</a>
@@ -113,6 +118,7 @@
   </footer>
 
   <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+  <script src="formspree-config.js"></script>
   <script src="shared.js"></script>
   <script src="data/regapp_b1a.js"></script>
   <script src="data/regapp_b1b.js"></script>
