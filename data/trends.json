@@ -1,1 +1,86 @@
-PLACEHOLDER
+{
+  "meta": {
+    "compiledAt": "2026-09-26T12:35:00+10:00",
+    "disclaimer": "National definitions and collection methods differ widely. Time series are not comparable 1:1 across countries. The map headline sum is a sum of latest reported national estimates, not a global census total.",
+    "gaps": [
+      "Most OECD HC3.1 countries publish a single latest-year headline here; multi-year series are included only where an official national time series was verified.",
+      "US HUD PIT 2021 national total omitted: pandemic disruptions meant a full comparable national (sheltered+unsheltered) total was not published the same way.",
+      "United Kingdom omitted from official country counts on the map (no clear unduplicated national person total in OECD HC3.1)."
+    ],
+    "sources": [
+      {
+        "id": "abs-2021",
+        "name": "ABS Estimating Homelessness: Census 2021 (table: counts by sex, 2006–2021)",
+        "url": "https://www.abs.gov.au/statistics/people/housing/estimating-homelessness-census/latest-release"
+      },
+      {
+        "id": "hud-ahar-2018",
+        "name": "HUD 2018 AHAR Part 1 — Exhibit 1.1 PIT totals 2007–2018",
+        "url": "https://www.huduser.gov/portal/sites/default/files/pdf/2018-AHAR-Part-1.pdf"
+      },
+      {
+        "id": "hud-ahar-2019",
+        "name": "HUD 2019 AHAR Part 1 / HUD archives (567,715)",
+        "url": "https://archives.hud.gov/news/2020/pr20-003.cfm"
+      },
+      {
+        "id": "hud-coc-perf-2024",
+        "name": "HUD CoC National Performance Profile 2024 (PIT 2020/2022/2023/2024)",
+        "url": "https://files.hudexchange.info/reports/published/CoC_Perf_NatlTerrDC_2024.pdf"
+      },
+      {
+        "id": "hud-ahar-2024",
+        "name": "HUD 2024 AHAR Part 1 (771,480)",
+        "url": "https://www.huduser.gov/portal/sites/default/files/pdf/2024-AHAR-Part-1.pdf"
+      },
+      {
+        "id": "oecd-hc31-xlsx",
+        "name": "OECD Affordable Housing Database HC3.1 (latest national headlines used on map)",
+        "url": "https://webfs.oecd.org/Els-com/Affordable_Housing_Database/HC3-1-Population-experiencing-homelessness.xlsx"
+      }
+    ]
+  },
+  "series": [
+    {
+      "id": "AU",
+      "name": "Australia",
+      "shortName": "Australia",
+      "color": "#147d7e",
+      "unit": "persons",
+      "definition": "ABS Census estimating homelessness (Census night). ABS notes 2021 boarding-house / temporary-lodging groups are not fully comparable with earlier Censuses due to greater use of administrative data.",
+      "points": [
+        {"year": 2006, "count": 89733, "sourceId": "abs-2021"},
+        {"year": 2011, "count": 102439, "sourceId": "abs-2021"},
+        {"year": 2016, "count": 116427, "sourceId": "abs-2021"},
+        {"year": 2021, "count": 122494, "sourceId": "abs-2021"}
+      ]
+    },
+    {
+      "id": "US",
+      "name": "United States",
+      "shortName": "United States",
+      "color": "#1f4e79",
+      "unit": "persons",
+      "definition": "HUD Point-in-Time (PIT) count of people experiencing sheltered or unsheltered homelessness on a single night in January. Definitions differ from ABS/OECD.",
+      "points": [
+        {"year": 2007, "count": 647258, "sourceId": "hud-ahar-2018"},
+        {"year": 2008, "count": 639784, "sourceId": "hud-ahar-2018"},
+        {"year": 2009, "count": 630227, "sourceId": "hud-ahar-2018"},
+        {"year": 2010, "count": 637077, "sourceId": "hud-ahar-2018"},
+        {"year": 2011, "count": 623788, "sourceId": "hud-ahar-2018"},
+        {"year": 2012, "count": 621553, "sourceId": "hud-ahar-2018"},
+        {"year": 2013, "count": 590364, "sourceId": "hud-ahar-2018"},
+        {"year": 2014, "count": 576450, "sourceId": "hud-ahar-2018"},
+        {"year": 2015, "count": 564708, "sourceId": "hud-ahar-2018"},
+        {"year": 2016, "count": 549928, "sourceId": "hud-ahar-2018"},
+        {"year": 2017, "count": 550996, "sourceId": "hud-ahar-2018"},
+        {"year": 2018, "count": 552830, "sourceId": "hud-ahar-2018"},
+        {"year": 2019, "count": 567715, "sourceId": "hud-ahar-2019"},
+        {"year": 2020, "count": 580466, "sourceId": "hud-coc-perf-2024"},
+        {"year": 2022, "count": 582462, "sourceId": "hud-coc-perf-2024"},
+        {"year": 2023, "count": 653104, "sourceId": "hud-coc-perf-2024"},
+        {"year": 2024, "count": 771480, "sourceId": "hud-ahar-2024"}
+      ]
+    }
+  ]
+}
