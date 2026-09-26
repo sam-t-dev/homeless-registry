@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Anonymous homeless registry — choose a place and submit situation data without personal details. Browser-local only.">
+  <title>Homeless Registry · Add to registry</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="register">
+  <header class="topbar">
+    <div>
+      <strong>Homeless Registry</strong>
+      <span class="tag">anonymous · local only</span>
+    </div>
+    <p>Choose a country, then a city. Add or update one situation for that place. No names, addresses, or contact details.</p>
+    <a class="btn-cta secondary-cta" href="index.html">View stats map</a>
+  </header>
+
+  <main class="layout">
+    <section class="map-panel" aria-label="Map">
+      <div id="map"></div>
+      <div class="map-hint">Click a place marker, or use the country list.</div>
+    </section>
+
+    <aside class="sidebar">
+      <form id="registryForm">
+        <section class="place-picker">
+          <h1>Add to registry</h1>
+          <label for="countrySelect">Country</label>
+          <select id="countrySelect" name="country" required>
+            <option value="">Choose a country…</option>
+          </select>
+          <label for="cityInput">City or area</label>
+          <input id="cityInput" name="city" list="cityOptions" autocomplete="off" placeholder="Choose a country first" required>
+          <datalist id="cityOptions"></datalist>
+          <p id="placeHint" class="muted">Country → city → register a situation. Stored only in this browser.</p>
+        </section>
+
+        <section id="stats" class="stats" hidden>
+          <h2 id="placeTitle">Selected place</h2>
+          <div class="stat-grid">
+            <div><strong id="placeTotal">0</strong><span>records</span></div>
+            <div><strong id="placeTypes">0</strong><span>situations</span></div>
+          </div>
+          <p id="placeBreakdown" class="muted"></p>
+        </section>
+
+        <section id="existing" class="existing" hidden>
+          <h2>I’ve already registered here</h2>
+          <p class="muted">Pick a record to update it instead of making a duplicate.</p>
+          <div id="existingList"></div>
+        </section>
+
+        <section id="formSection" class="form-section" hidden>
+          <h2 id="formTitle">Register a situation</h2>
+          <input type="hidden" id="recordId">
+          <label for="category">Sleeping situation</label>
+          <select id="category" required>
+            <option value="">Select…</option>
+            <option value="rough_sleeping">Rough sleeping</option>
+            <option value="vehicle">Vehicle</option>
+            <option value="couch">Couch surfing</option>
+            <option value="other">Other</option>
+          </select>
+          <label for="duration">Duration</label>
+          <select id="duration" required>
+            <option value="">Select…</option>
+            <option value="less_than_week">Less than a week</option>
+            <option value="1_4_weeks">1–4 weeks</option>
+            <option value="1_3_months">1–3 months</option>
+            <option value="3_plus_months">3+ months</option>
+          </select>
+          <fieldset>
+            <legend>Optional needs</legend>
+            <label><input type="checkbox" name="need" value="food"> Food</label>
+            <label><input type="checkbox" name="need" value="shelter"> Shelter</label>
+            <label><input type="checkbox" name="need" value="medical"> Medical</label>
+          </fieldset>
+          <div class="form-actions">
+            <button type="submit" id="saveButton">Save anonymously</button>
+            <button type="button" id="cancelButton" class="secondary" hidden>Cancel update</button>
+          </div>
+          <p id="message" class="message" role="status"></p>
+        </section>
+      </form>
+    </aside>
+  </main>
+
+  <footer>
+    Anonymous · browser-local only. No names, addresses, contact details, or API key required.
+    · <a href="privacy-policy.html">Privacy</a>
+    · <a href="terms.html">Terms</a>
+    · <a href="index.html">View stats map</a>
+  </footer>
+
+  <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+  <script src="shared.js"></script>
+  <script src="register-app.js"></script>
+</body>
+</html>
