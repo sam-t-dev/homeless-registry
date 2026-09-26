@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Homelessness numbers and trends — official national estimates over time, without the map.">
-  <title>Homeless Registry · Numbers &amp; trends</title>
+  <title>Homeless Registry · Numbers & trends</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="styles-numbers.css">
 </head>
@@ -23,7 +23,7 @@
 
   <main class="numbers-page">
     <section class="numbers-hero">
-      <h1>Numbers &amp; trends</h1>
+      <h1>Numbers & trends</h1>
       <p class="disclaimer" id="disclaimer">Loading…</p>
       <div class="kpi-row" id="kpiRow" aria-live="polite"></div>
     </section>
@@ -43,10 +43,9 @@
           <button type="button" class="chip" data-range="10">10y</button>
           <button type="button" class="chip" data-range="5">5y</button>
         </div>
-        <div class="toolbar-group" role="group" aria-label="Series">
+        <div class="toolbar-group" role="group" aria-label="Series" id="seriesToggles">
           <span class="toolbar-label">Series</span>
-          <label class="chip-check"><input type="checkbox" data-series="AU" checked> Australia</label>
-          <label class="chip-check"><input type="checkbox" data-series="US" checked> United States</label>
+          <!-- filled by numbers-app from trends.json -->
         </div>
       </div>
       <div class="chart-wrap">
