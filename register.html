@@ -12,7 +12,7 @@
   <header class="topbar">
     <div>
       <strong>Homeless Registry</strong>
-      <span class="tag">anonymous · local only</span>
+      <span class="tag">anonymous · Formspree + local cache</span>
     </div>
     <p>Choose a country, then a city. Add or update one situation for that place. No names, addresses, or contact details.</p>
     <div class="topbar-actions">
@@ -35,6 +35,13 @@
           <select id="countrySelect" name="country" required>
             <option value="">Choose a country…</option>
           </select>
+          <div id="otherCountryFields" class="other-country-fields" hidden>
+            <label for="otherCountryName">Country name</label>
+            <input id="otherCountryName" name="otherCountryName" autocomplete="country-name" placeholder="e.g. Ghana" maxlength="80">
+            <label for="otherCountryCode">Country code <span class="muted">(2–3 letters, optional)</span></label>
+            <input id="otherCountryCode" name="otherCountryCode" autocomplete="off" placeholder="e.g. GH" maxlength="8" pattern="[A-Za-z]{2,8}">
+            <p class="muted note">New countries are saved in this browser and appear in the list next time. Official homelessness counts stay blank until published.</p>
+          </div>
           <label for="cityInput">City or area</label>
           <input id="cityInput" name="city" list="cityOptions" autocomplete="off" placeholder="Choose a country first" required>
           <datalist id="cityOptions"></datalist>
@@ -120,6 +127,7 @@
   <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
   <script src="formspree-config.js"></script>
   <script src="shared.js"></script>
+  <script src="shared-custom-countries.js"></script>
   <script src="data/regapp_b1a.js"></script>
   <script src="data/regapp_b1b.js"></script>
   <script src="data/regapp_b2.js"></script>
