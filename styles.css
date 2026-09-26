@@ -6,113 +6,122 @@
   --card-bg: #ffffff;
   --text-color: #2c3e50;
   --muted-color: #7f8c8d;
+  --border: #e5e7eb;
 }
 
-/* Fix clickability - ensure proper z-index stacking */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: -apple-system, BlinkMacSystemSystem, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
   line-height: 1.6;
-  max-width: 1200px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 20px;
-  /* Fix: ensure body doesn't block clicks */
-  position: relative;
 }
 
-/* Fixed header */
 header {
   text-align: center;
-  padding: 2rem 0;
+  padding: 2rem 0 1.5rem;
   border-bottom: 2px solid var(--primary-color);
   margin-bottom: 2rem;
-  position: relative;
-  z-index: 100;
 }
 
-/* Fixed mode toggle - must be above map */
-.mode-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
+header h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+.muted, .note { color: var(--muted-color); font-size: 0.9rem; }
+
+main section {
   background: var(--card-bg);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  z-index: 1000; /* Critical: above map */
-  /* Add pointer-events to allow clicks through if needed */
-  /* pointer-events: none; */  /* Remove this if you want the toggle to be clickable */
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-/* Map section - ensure it doesn't capture all clicks */
-.map-section {
-  /* position: relative; */
-  /* z-index: 1; */
+.form-group { margin-bottom: 1rem; }
+.form-group label, .form-group .label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
 }
-
-/* Map div - ensure clicks can register */
-#map {
+.form-group input[type="text"],
+.form-group select {
   width: 100%;
-  height: 70vh;
-  position: relative;
-  /* pointer-events: none; */  /* Remove if map clicks should work */
-  z-index: 1;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
 }
-
-/* Sidebar - must be above map for clicks */
-.sidebar {
-  margin-top: -70vh;
-  padding: 1rem;
-  max-height: 70vh;
-  overflow-y: auto;
-  direction: ltr;
-  position: relative;
-  /* z-index ensures it's above map */
-  z-index: 10;
-  /* Fix overflow */
-  overflow: visible;
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
+.checkbox-group label { font-weight: 400; display: flex; gap: 0.4rem; align-items: center; }
 
-/* Timeline select - ensure it's above other elements */
-.timeline-selector {
-  position: relative;
-  z-index: 20;
-  /* Add explicit clickable styles */
-  select {
-    cursor: pointer;
-  }
-}
-
-/* Make sure form elements are clickable */
-.form-group input,
-.form-group select,
-.form-group .checkbox-group,
-button[type=\"submit\"] {
+button[type="submit"] {
+  background: var(--secondary-color);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  font: inherit;
+  font-weight: 600;
   cursor: pointer;
-  user-select: text;
 }
-
-/* Add explicit hover styles */
-button[type=\"submit\"]:hover {
-  background-color: #2980b9;
-}
-
-/* Ensure legend items are clickable */
-.map-legend i {
-  cursor: pointer;
-  user-select: none;
-}
-
-/* Focus states for accessibility */
-button[type=\"submit\"]:focus,
-select:focus {
+button[type="submit"]:hover { background-color: #2980b9; }
+button[type="submit"]:focus,
+select:focus,
+input:focus {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
+
+.success-message {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 8px;
+}
+
+.counts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.count-card {
+  background: var(--bg-color);
+  border-radius: 10px;
+  padding: 1rem;
+}
+.count-card .number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--secondary-color);
+}
+.city-breakdown ul, .world-stats ul {
+  list-style: none;
+  margin-top: 0.75rem;
+}
+.city-breakdown li, .world-stats li {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+.filters label { font-size: 0.9rem; display: flex; flex-direction: column; gap: 0.25rem; }
+
+footer {
+  text-align: center;
+  padding: 2rem 0;
+  color: var(--muted-color);
+  font-size: 0.9rem;
+}
+footer a { color: var(--secondary-color); }
