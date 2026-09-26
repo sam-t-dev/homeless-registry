@@ -1,0 +1,61 @@
+.existing-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-top:1px solid #edf0f2;font-size:.84rem}
+.existing-item button{white-space:nowrap}
+button{border:0;border-radius:5px;padding:9px 12px;background:#147d7e;color:#fff;font:inherit;font-weight:700;cursor:pointer}
+button:hover{background:#0d6566}
+button.secondary{background:#edf1f3;color:#243744}
+button.secondary:hover{background:#dde5e9}
+.form-actions{display:flex;gap:8px;margin-top:15px}
+fieldset{border:0;padding:0;margin:14px 0 0;display:flex;gap:12px;flex-wrap:wrap}
+fieldset legend{font-size:.86rem;font-weight:650;margin-bottom:5px;width:100%}
+fieldset label{font-weight:400;margin:0;display:flex;gap:5px;align-items:center}
+fieldset input{width:auto}
+.message{min-height:1.25em;color:#147d7e;font-size:.86rem}
+.maplibregl-popup-content button{padding:6px 9px;font-size:.8rem}
+footer{text-align:center;padding:12px;color:#61727e;background:#edf1f3;font-size:.8rem}
+footer a{color:#147d7e}
+@media(max-width:800px){
+  .topbar{align-items:flex-start}
+  .layout{display:flex;flex-direction:column}
+  .map-panel{order:0;height:45vh;min-height:280px;width:100%}
+  .sidebar{order:1;max-height:none;border-left:0;width:100%}
+  .map-hint{font-size:.75rem}
+  .split-breakdown{grid-template-columns:1fr}
+  .stat-grid{grid-template-columns:1fr 1fr}
+}
+
+/* Official count form memory panel (register) */
+.official-form-card{background:#eef5f5;border:1px solid #cfe0e0;border-radius:8px;padding:0;margin:0 0 4px}
+.official-form-card details{padding:10px 12px}
+.official-form-card summary{cursor:pointer;font-weight:700;font-size:.9rem;color:#102a43;list-style:none;display:flex;align-items:center;gap:8px}
+.official-form-card summary::-webkit-details-marker{display:none}
+.official-form-card summary::before{content:"▸";color:#147d7e;font-size:.85rem}
+.official-form-card details[open] summary::before{content:"▾"}
+.official-form-body{margin-top:8px}
+.official-form-title{margin:0 0 6px;font-weight:700;font-size:.92rem;color:#12212b}
+.official-form-cues{margin:8px 0;padding-left:18px;font-size:.84rem;line-height:1.45;color:#3a4d59}
+.official-form-cues li{margin:3px 0}
+.official-form-links{margin:8px 0 0;font-size:.84rem}
+.official-form-links a{color:#147d7e;font-weight:650}
+.official-form-links .sep{color:#8a9ba6;margin:0 6px}
+
+/* Shared nav / clickable KPI on map */
+.topbar-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.kpi-link{color:#147d7e;text-decoration:underline;text-underline-offset:3px}
+.kpi-link:hover{color:#0d6566}
+.stat-grid .kpi-link{color:inherit;text-decoration:underline;text-underline-offset:3px}
+
+/* Have I already been counted? (register) */
+.already-counted-card{border-color:#9fd3c7}
+.already-counted-hero{padding:12px 14px 4px;background:linear-gradient(180deg,#e4f4f2 0%,#eef5f5 100%);border-radius:8px 8px 0 0}
+.already-counted-q{margin:0 0 6px;font-size:1.05rem;font-weight:800;color:#102a43;line-height:1.25}
+.already-counted-blurb{margin:0 0 8px;font-size:.88rem;color:#3a4d59;line-height:1.4}
+.already-counted-link{margin:0 0 8px;font-size:.9rem}
+.already-counted-link a{display:inline-block;background:#147d7e;color:#fff!important;font-weight:700;text-decoration:none;padding:8px 12px;border-radius:5px}
+.already-counted-link a:hover{background:#0d6566}
+.already-counted-link .place-label{display:block;margin-top:6px;font-size:.78rem;color:#61727e}
+.already-counted-card details{border-top:1px solid #cfe0e0}
+
+.other-country-fields{margin:8px 0 4px;padding:10px 12px;background:#f7fbfb;border:1px dashed #9fd3c7;border-radius:8px}
+.other-country-fields label{margin-top:6px}
+.other-country-fields input{width:100%}
+.other-country-fields .note{margin:8px 0 0;font-size:.82rem}
