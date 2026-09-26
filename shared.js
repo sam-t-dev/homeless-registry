@@ -85,7 +85,7 @@
   const STORAGE_KEY = 'registryRecords';
 
   function esc(value) {
-    return String(value ?? '').replace(/[&<>'\"]/g, (c) => ({
+    return String(value ?? '').replace(/[&<>'\"']/g, (c) => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
     }[c]));
   }
@@ -105,7 +105,12 @@
     } catch (e) { return []; }
   }
   function saveLocalRecords(records) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } catch (err) {
+      console.warn('saveLocalRecords failed', err && err.message ? err.message : err);
+      throw err;
+    }
   }
 
   async function loadPublishedRecords() {
