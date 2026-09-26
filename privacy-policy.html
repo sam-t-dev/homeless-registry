@@ -7,37 +7,35 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
+  <header class="legal-header">
+    <p class="eyebrow">Legal</p>
     <h1>Privacy Policy</h1>
     <p class="muted">Anonymous Homeless Registry · Effective 26 September 2026</p>
   </header>
-  <main>
-    <section>
+  <main id="main" class="legal-main">
+    <section class="card">
       <h2>Summary</h2>
       <p>We believe everyone has the right to privacy, especially those experiencing homelessness. This policy explains what this site collects and how it is used.</p>
       <h2>Information we collect</h2>
-      <p><strong>We collect zero personally identifying information.</strong> Recorded fields are only:</p>
-      <ul>
-        <li>Approximate city (text you provide)</li>
-        <li>Sleeping situation category</li>
-        <li>Rough duration</li>
-        <li>Optional needs tags from a fixed list</li>
-        <li>Timestamp</li>
-        <li>One-time anonymous token for self-deletion</li>
-      </ul>
+      <p><strong>We collect zero personally identifying information.</strong> Recorded fields are only country, approximate city, sleeping situation, duration, optional needs tags, timestamp, and an anonymous token.</p>
       <p>We do not collect names, phone numbers, emails, addresses, GPS, photos, free-text narratives, IP logs, or browser fingerprints.</p>
       <h2>How information is used</h2>
       <ul>
         <li>Public display shows aggregate counts only</li>
         <li>Your token is the only handle for deleting your record</li>
-        <li>Current live demo stores submissions in your browser (localStorage). A shared GitHub-backed pipeline remains work-in-progress</li>
+        <li>Current live demo stores submissions in your browser (localStorage)</li>
       </ul>
-      <h2>Deletion, retention, security</h2>
-      <p>Use your token link to delete. Records remain until you delete them. No PII is designed into the schema, limiting re-identification risk from aggregates.</p>
       <h2>Contact</h2>
       <p>Questions: open an issue on the <a href="https://github.com/sam-t-dev/homeless-registry">GitHub repository</a>.</p>
-      <p><a href="index.html">← Back to registry</a></p>
+      <p><a class="back-link" href="index.html">← Back to registry</a></p>
     </section>
   </main>
+  <footer class="site-footer">
+    <nav aria-label="Legal">
+      <a href="index.html">Registry</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="https://github.com/sam-t-dev/homeless-registry">Source</a>
+    </nav>
+  </footer>
 </body>
 </html>

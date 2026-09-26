@@ -7,12 +7,13 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
+  <header class="legal-header">
+    <p class="eyebrow">Legal</p>
     <h1>Terms of Service</h1>
     <p class="muted">Anonymous Homeless Registry · Updated 26 September 2026</p>
   </header>
-  <main>
-    <section>
+  <main id="main" class="legal-main">
+    <section class="card">
       <h2>Acceptance</h2>
       <p>By using this website you agree to these terms. If you disagree, do not use the site.</p>
       <h2>Eligibility</h2>
@@ -23,20 +24,20 @@
         <li>Using data to harass, target, or discriminate</li>
         <li>Attempting to scrape or reconstruct individual records beyond public aggregates</li>
         <li>Spamming or flooding submissions</li>
-        <li>Tampering with the site or circumventing safeguards</li>
-      </ul>
-      <h2>User submissions</h2>
-      <ul>
-        <li>Submit only non-identifying situation data</li>
-        <li>Keep your anonymous token secure; lost tokens cannot be recovered for deletion</li>
-        <li>Submissions containing PII may be removed</li>
       </ul>
       <h2>Privacy</h2>
       <p>See the <a href="privacy-policy.html">Privacy Policy</a>.</p>
       <h2>Contact</h2>
       <p>Questions via <a href="https://github.com/sam-t-dev/homeless-registry">repository issues</a>.</p>
-      <p><a href="index.html">← Back to registry</a></p>
+      <p><a class="back-link" href="index.html">← Back to registry</a></p>
     </section>
   </main>
+  <footer class="site-footer">
+    <nav aria-label="Legal">
+      <a href="index.html">Registry</a>
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="https://github.com/sam-t-dev/homeless-registry">Source</a>
+    </nav>
+  </footer>
 </body>
 </html>
