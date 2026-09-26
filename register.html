@@ -1,1 +1,135 @@
-<PLACEHOLDER>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Anonymous homeless registry — choose a place and submit situation data without personal details. Browser-local only.">
+  <title>Homeless Registry · Add to registry</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="register">
+  <header class="topbar">
+    <div>
+      <strong>Homeless Registry</strong>
+      <span class="tag">anonymous · Formspree + local cache</span>
+    </div>
+    <p>Choose a country, then a city. Add or update one situation for that place. No names, addresses, or contact details.</p>
+    <div class="topbar-actions">
+      <a class="btn-cta secondary-cta" href="numbers.html">Numbers</a>
+      <a class="btn-cta secondary-cta" href="index.html">View stats map</a>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="map-panel" aria-label="Map">
+      <div id="map"></div>
+      <div class="map-hint">Click a place marker, or use the country list.</div>
+    </section>
+
+    <aside class="sidebar">
+      <form id="registryForm">
+        <section class="place-picker">
+          <h1>Add to registry</h1>
+          <label for="countrySelect">Country</label>
+          <select id="countrySelect" name="country" required>
+            <option value="">Choose a country…</option>
+          </select>
+          <div id="otherCountryFields" class="other-country-fields" hidden>
+            <label for="otherCountryName">Country name</label>
+            <input id="otherCountryName" name="otherCountryName" autocomplete="country-name" placeholder="e.g. Ghana" maxlength="80">
+            <label for="otherCountryCode">Country code <span class="muted">(2–3 letters, optional)</span></label>
+            <input id="otherCountryCode" name="otherCountryCode" autocomplete="off" placeholder="e.g. GH" maxlength="8" pattern="[A-Za-z]{2,8}">
+            <p class="muted note">New countries are saved in this browser and appear in the list next time. Official homelessness counts stay blank until published.</p>
+          </div>
+          <label for="cityInput">City or area</label>
+          <input id="cityInput" name="city" list="cityOptions" autocomplete="off" placeholder="Choose a country first" required>
+          <datalist id="cityOptions"></datalist>
+          <p id="placeHint" class="muted">Country → city → register a situation. Submissions are saved to the registry server (Formspree); a copy also stays in this browser as an offline cache.</p>
+        </section>
+
+        <section id="officialFormPanel" class="official-form-card already-counted-card" hidden>
+          <div class="already-counted-hero">
+            <p id="alreadyCountedQ" class="already-counted-q">Have I already been counted?</p>
+            <p id="alreadyCountedBlurb" class="already-counted-blurb"></p>
+            <p id="alreadyCountedLink" class="already-counted-link"></p>
+          </div>
+          <details id="officialFormDetails" open>
+            <summary>How this place is counted officially</summary>
+            <div class="official-form-body">
+              <p id="officialFormTitle" class="official-form-title"></p>
+              <p id="officialFormDesc" class="muted"></p>
+              <ul id="officialFormCues" class="official-form-cues"></ul>
+              <p id="officialFormLinks" class="official-form-links"></p>
+              <p id="officialFormGap" class="muted note" hidden></p>
+            </div>
+          </details>
+        </section>
+
+        <section id="stats" class="stats" hidden>
+          <h2 id="placeTitle">Selected place</h2>
+          <div class="stat-grid">
+            <div><strong id="placeTotal">0</strong><span>records</span></div>
+            <div><strong id="placeTypes">0</strong><span>situations</span></div>
+          </div>
+          <p id="placeBreakdown" class="muted"></p>
+        </section>
+
+        <section id="existing" class="existing" hidden>
+          <h2>I’ve already registered here</h2>
+          <p class="muted">Pick a record to update it instead of making a duplicate.</p>
+          <div id="existingList"></div>
+        </section>
+
+        <section id="formSection" class="form-section" hidden>
+          <h2 id="formTitle">Register a situation</h2>
+          <input type="hidden" id="recordId">
+          <label for="category">Sleeping situation</label>
+          <select id="category" required>
+            <option value="">Select…</option>
+            <option value="rough_sleeping">Rough sleeping</option>
+            <option value="vehicle">Vehicle</option>
+            <option value="couch">Couch surfing</option>
+            <option value="other">Other</option>
+          </select>
+          <label for="duration">Duration</label>
+          <select id="duration" required>
+            <option value="">Select…</option>
+            <option value="less_than_week">Less than a week</option>
+            <option value="1_4_weeks">1–4 weeks</option>
+            <option value="1_3_months">1–3 months</option>
+            <option value="3_plus_months">3+ months</option>
+          </select>
+          <fieldset>
+            <legend>Optional needs</legend>
+            <label><input type="checkbox" name="need" value="food"> Food</label>
+            <label><input type="checkbox" name="need" value="shelter"> Shelter</label>
+            <label><input type="checkbox" name="need" value="medical"> Medical</label>
+          </fieldset>
+          <div class="form-actions">
+            <button type="submit" id="saveButton">Save anonymously</button>
+            <button type="button" id="cancelButton" class="secondary" hidden>Cancel update</button>
+          </div>
+          <p id="message" class="message" role="status"></p>
+        </section>
+      </form>
+    </aside>
+  </main>
+
+  <footer>
+    Anonymous · no names, addresses, or contact details. Saves go to the registry server (Formspree); local browser cache kept as backup.
+    · <a href="numbers.html">Numbers</a>
+    · <a href="privacy-policy.html">Privacy</a>
+    · <a href="terms.html">Terms</a>
+    · <a href="index.html">View stats map</a>
+  </footer>
+
+  <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+  <script src="formspree-config.js"></script>
+  <script src="shared.js"></script>
+  <script src="data/regapp_b1a.js"></script>
+  <script src="data/regapp_b1b.js"></script>
+  <script src="data/regapp_b2.js"></script>
+  <script src="register-app.js"></script>
+</body>
+</html>
